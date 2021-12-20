@@ -20,7 +20,14 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         Debug.Log("Player List:");
         Debug.Log("Count: " + PhotonNetwork.PlayerList.Length);
         //Populate player names in UI
-        myPv.RPC("updateName", RpcTarget.All);
+        if (PhotonNetwork.PlayerList.Length < 9)
+        {
+            myPv.RPC("updateName", RpcTarget.All);
+        }
+        if (PhotonNetwork.PlayerList.Length == 8)
+        {
+            Debug.Log("Start Game");
+        }
     }
 
     // Update is called once per frame
