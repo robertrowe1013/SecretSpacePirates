@@ -1214,6 +1214,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1216039167}
   - component: {fileID: 1216039166}
+  - component: {fileID: 1216039168}
   m_Layer: 0
   m_Name: MGManager
   m_TagString: Untagged
@@ -1235,6 +1236,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4073994080838548756, guid: 6921508b339ed0749b8ab6d323ccc4f6, type: 3}
   roomName: {fileID: 1019016144}
+  displayNames:
+  - {fileID: 1402967000}
+  - {fileID: 682015933}
+  - {fileID: 61033346}
+  - {fileID: 578582872}
+  - {fileID: 1756013563}
+  - {fileID: 136258733}
+  - {fileID: 1256142277}
+  - {fileID: 74018524}
 --- !u!4 &1216039167
 Transform:
   m_ObjectHideFlags: 0
@@ -1249,6 +1259,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1216039168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216039165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1256142275
 GameObject:
   m_ObjectHideFlags: 0
