@@ -8,13 +8,23 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class MainGameManager : MonoBehaviourPunCallbacks
 {
+    PhotonView myPv;
     public GameObject playerPrefab;
+    //UI elements
     public TextMeshProUGUI roomName;
     public TextMeshProUGUI[] displayNames;
-    PhotonView myPv;
+
     public GameObject loyaltyPopup;
     public TextMeshProUGUI loyaltyText;
+    public GameObject otherPiratePopup;
+    public TextMeshProUGUI otherPirateName;
+    public TextMeshProUGUI pirateLeaderName;
     public string testString;
+    //Game Elements
+    public int maxPlayers = 8;
+    public Player pirateLeader;
+    public Player pirateCrew1;
+    public Player pirateCrew2;
 
     // Start is called before the first frame update
     void Start()
@@ -24,18 +34,18 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
         PhotonNetwork.NickName = PlayerPrefs.GetString("PName");
         //Populate player names in UI
-        if (PhotonNetwork.PlayerList.Length <= 8)
+        if (PhotonNetwork.PlayerList.Length <= maxPlayers)
         {
             myPv.RPC("updateName", RpcTarget.All);
         }
         // Start Game once 8th player joins
-        if (PhotonNetwork.PlayerList.Length == 2)
+        if (PhotonNetwork.PlayerList.Length == maxPlayers)
         {
             // set loyalties
             List<int> ranNums = new List<int>();
             while (ranNums.Count < 3)
             {
-                int n = Random.Range(0, 8);
+                int n = Random.Range(0, maxPlayers);
                 if (!ranNums.Contains(n))
                 {
                     ranNums.Add(n);
@@ -62,9 +72,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void startGame(int[] ranNumArr)
     {
-        // int[] ranNumArr = numList;
-        Debug.Log(ranNumArr);   
-        loyaltyText.text = ranNumArr[0].ToString() + ranNumArr[1].ToString() + ranNumArr[2].ToString();
+        pirateLeader = PhotonNetwork.PlayerList[ranNumArr[0]];
+        pirateCrew1 = PhotonNetwork.PlayerList[ranNumArr[1]];
+        pirateCrew2 = PhotonNetwork.PlayerList[ranNumArr[2]];
     }
 
     public void loyaltyToggle()
@@ -76,6 +86,31 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         else
         {
             loyaltyPopup.SetActive(true);
+            if (pirateLeader != null)
+            {
+                if (PhotonNetwork.LocalPlayer == pirateLeader)
+                {
+                    loyaltyText.text = "the Pirate Leader!";
+                }
+                else if (PhotonNetwork.LocalPlayer == pirateCrew1)
+                {
+                    loyaltyText.text = "a Secret Pirate!";
+                    otherPiratePopup.SetActive(true);
+                    otherPirateName.text = pirateCrew2.NickName;
+                    pirateLeaderName.text = pirateLeader.NickName;
+                }
+                else if (PhotonNetwork.LocalPlayer == pirateCrew2)
+                {
+                    loyaltyText.text = "a Secret Pirate!";
+                    otherPiratePopup.SetActive(true);
+                    otherPirateName.text = pirateCrew1.NickName;
+                    pirateLeaderName.text = pirateLeader.NickName;
+                }
+                else
+                {
+                    loyaltyText.text = "a Loyal Crewman!";
+                }
+            }
         }
     }
 }
