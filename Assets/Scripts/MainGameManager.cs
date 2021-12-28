@@ -13,7 +13,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     //UI elements
     public TextMeshProUGUI roomName;
     public TextMeshProUGUI[] displayNames;
-
     public GameObject loyaltyPopup;
     public TextMeshProUGUI loyaltyText;
     public GameObject otherPiratePopup;
@@ -25,8 +24,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public Player pirateLeader;
     public Player pirateCrew1;
     public Player pirateCrew2;
+    public Player currentPlayer;
 
-    // Start is called before the first frame update
     void Start()
     {
         myPv = this.GetComponent<PhotonView>();
@@ -41,7 +40,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         // Start Game once 8th player joins
         if (PhotonNetwork.PlayerList.Length == maxPlayers)
         {
-            // set loyalties
+            // randomize loyalties
             List<int> ranNums = new List<int>();
             while (ranNums.Count < 3)
             {
@@ -72,9 +71,12 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void startGame(int[] ranNumArr)
     {
+        //set loyalties across network, assign first player
         pirateLeader = PhotonNetwork.PlayerList[ranNumArr[0]];
         pirateCrew1 = PhotonNetwork.PlayerList[ranNumArr[1]];
         pirateCrew2 = PhotonNetwork.PlayerList[ranNumArr[2]];
+        int i = Random.Range(0, maxPlayers);
+        currentPlayer = PhotonNetwork.PlayerList[i];
     }
 
     public void loyaltyToggle()
@@ -108,7 +110,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    loyaltyText.text = "a Loyal Crewman!";
+                    loyaltyText.text = "Loyal Crew!";
                 }
             }
         }

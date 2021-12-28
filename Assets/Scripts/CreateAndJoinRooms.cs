@@ -32,8 +32,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         PlayerPrefs.SetString("PName", playerName.text);
         PlayerPrefs.SetString("RName", roomName.text);
         PlayerPrefs.Save();
-        Debug.Log("Room Name: " + roomName.text);
-        Debug.Log("RName in Prefs: " + PlayerPrefs.GetString("RName"));
+        // Debug.Log("Room Name: " + roomName.text);
+        // Debug.Log("RName in Prefs: " + PlayerPrefs.GetString("RName"));
         PhotonNetwork.JoinRoom(roomName.text);
     }
 
