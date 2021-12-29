@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -19,7 +20,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI otherPirateName;
     public TextMeshProUGUI pirateLeaderName;
     public TextMeshProUGUI topText;
-    public GameObject chooseAPlayerToggles;
     public string testString;
     //Game Elements
     public int maxPlayers = 8;
@@ -83,6 +83,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         pirateCrew2 = PhotonNetwork.PlayerList[ranNumArr[2]];
         currentPlayer = PhotonNetwork.PlayerList[ranNumArr[3]];
         firstMate = currentPlayer;
+        captain = currentPlayer;
         myPv.RPC("mainGameLoop", RpcTarget.All);
     }
 
@@ -93,8 +94,20 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.LocalPlayer == currentPlayer)
         {
             topText.text = "You are the First Mate! Choose a Captain.";
-            chooseAPlayerToggles.SetActive(true);
+            activatePlayerChoices("chooseCaptain");
         }
+    }
+
+    [PunRPC]
+    void setCaptain(int n)
+    {
+        captain = PhotonNetwork.PlayerList[n];
+    }
+
+    [PunRPC]
+    void voteForCaptain()
+    {
+        Debug.Log("Captain chosen: " + captain.NickName);
     }
 
     public void loyaltyToggle()
@@ -132,5 +145,89 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                 }
             }
         }
+    }
+
+    public void activatePlayerChoices(string activeType)
+    {
+        if (activeType == "chooseCaptain")
+        {
+            foreach (TextMeshProUGUI name in displayNames)
+            {
+                
+                if (name.text == captain.NickName || name.text == firstMate.NickName)
+                {
+                    continue;
+                }
+                else
+                {
+                    Transform toggle = name.gameObject.transform.GetChild(0);
+                    toggle.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
+
+    public void togglePlayerOne()
+    {
+        Toggle m_toggle = GetComponent<Toggle>();
+        m_toggle.isOn = false;
+        myPv.RPC("setCaptain", RpcTarget.All, 0);
+        myPv.RPC("voteForCaptain", RpcTarget.All);
+    }
+
+    public void togglePlayerTwo()
+    {
+        //Toggle m_toggle = GetComponent<Toggle>();
+        //m_toggle.isOn = false;
+        myPv.RPC("setCaptain", RpcTarget.All, 1);
+        myPv.RPC("voteForCaptain", RpcTarget.All);
+    }
+
+    public void togglePlayerThree()
+    {
+        Toggle m_toggle = GetComponent<Toggle>();
+        m_toggle.isOn = false;
+        myPv.RPC("setCaptain", RpcTarget.All, 2);
+        myPv.RPC("voteForCaptain", RpcTarget.All);
+    }
+
+    public void togglePlayerFour()
+    {
+        Toggle m_toggle = GetComponent<Toggle>();
+        m_toggle.isOn = false;
+        myPv.RPC("setCaptain", RpcTarget.All, 3);
+        myPv.RPC("voteForCaptain", RpcTarget.All);
+    }
+
+    public void togglePlayerFive()
+    {
+        Toggle m_toggle = GetComponent<Toggle>();
+        m_toggle.isOn = false;
+        myPv.RPC("setCaptain", RpcTarget.All, 4);
+        myPv.RPC("voteForCaptain", RpcTarget.All);
+    }
+
+    public void togglePlayerSix()
+    {
+        Toggle m_toggle = GetComponent<Toggle>();
+        m_toggle.isOn = false;
+        myPv.RPC("setCaptain", RpcTarget.All, 5);
+        myPv.RPC("voteForCaptain", RpcTarget.All);
+    }
+
+    public void togglePlayerSeven()
+    {
+        Toggle m_toggle = GetComponent<Toggle>();
+        m_toggle.isOn = false;
+        myPv.RPC("setCaptain", RpcTarget.All, 6);
+        myPv.RPC("voteForCaptain", RpcTarget.All);
+    }
+
+    public void togglePlayerEight()
+    {
+        Toggle m_toggle = GetComponent<Toggle>();
+        m_toggle.isOn = false;
+        myPv.RPC("setCaptain", RpcTarget.All, 7);
+        myPv.RPC("voteForCaptain", RpcTarget.All);
     }
 }
