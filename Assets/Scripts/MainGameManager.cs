@@ -18,6 +18,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public GameObject otherPiratePopup;
     public TextMeshProUGUI otherPirateName;
     public TextMeshProUGUI pirateLeaderName;
+    public TextMeshProUGUI topText;
+    public GameObject chooseAPlayerToggles;
     public string testString;
     //Game Elements
     public int maxPlayers = 8;
@@ -25,6 +27,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public Player pirateCrew1;
     public Player pirateCrew2;
     public Player currentPlayer;
+    public Player firstMate;
+    public Player captain;
 
     void Start()
     {
@@ -50,7 +54,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                     ranNums.Add(n);
                 }
             }
-            int[] numList = new int[3];
+            int i = Random.Range(0, maxPlayers);
+            ranNums.Add(i);
+            int[] numList = new int[4];
             numList = ranNums.ToArray();
             myPv.RPC("startGame", RpcTarget.All, numList as object);
         }
@@ -75,8 +81,20 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         pirateLeader = PhotonNetwork.PlayerList[ranNumArr[0]];
         pirateCrew1 = PhotonNetwork.PlayerList[ranNumArr[1]];
         pirateCrew2 = PhotonNetwork.PlayerList[ranNumArr[2]];
-        int i = Random.Range(0, maxPlayers);
-        currentPlayer = PhotonNetwork.PlayerList[i];
+        currentPlayer = PhotonNetwork.PlayerList[ranNumArr[3]];
+        firstMate = currentPlayer;
+        myPv.RPC("mainGameLoop", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void mainGameLoop()
+    {
+        topText.text = currentPlayer.NickName + " is choosing a Captian.";
+        if (PhotonNetwork.LocalPlayer == currentPlayer)
+        {
+            topText.text = "You are the First Mate! Choose a Captain.";
+            chooseAPlayerToggles.SetActive(true);
+        }
     }
 
     public void loyaltyToggle()
