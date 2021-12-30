@@ -23,7 +23,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI voteForCaptainName;
     public TextMeshProUGUI voteForFirstMateName;    
     public TextMeshProUGUI topText;
-    public string testString;
+    public GameObject voteTallyPopup;
+    public TextMeshProUGUI listOfVotes;
+    public TextMeshProUGUI voteTotalsText;
+    public GameObject continueButton;
     //Game Elements
     public int maxPlayers = 8;
     public Player pirateLeader;
@@ -34,6 +37,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public Player captain;
     public Player captainElect;
     public Dictionary<string, string> allVotes = new Dictionary<string, string>();
+    int voteTally;
+    bool votePassed;
 
     void Start()
     {
@@ -134,10 +139,29 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         allVotes.Add(name, vote);
         if (allVotes.Count == 8)
         {
+            topText.text = "";
+            voteTally = 0;
+            listOfVotes.text = "";
+            voteTallyPopup.SetActive(true);
             foreach ( KeyValuePair<string, string> votes in allVotes)
             {
-                Debug.Log(votes.Key + " voted " + votes.Value);
+                listOfVotes.text = listOfVotes.text + votes.Key + " voted " + votes.Value + "\n";
+                if (votes.Value == "Aye")
+                {
+                    voteTally += 1;
+                }
             }
+            if (voteTally > maxPlayers / 2)
+            {
+                voteTotalsText.text = "The vote passes!";
+                votePassed = true;
+            }
+            else
+            {
+                voteTotalsText.text = "The vote fails!";
+                votePassed = false;
+            }
+            continueButton.SetActive(true);
             allVotes.Clear();
         }
     }
@@ -249,14 +273,14 @@ public class MainGameManager : MonoBehaviourPunCallbacks
 
     public void voteAye()
     {
-        myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "aye");
+        myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Aye");
         voteForCaptainPopup.SetActive(false);
         topText.text = "Tallying votes...";
     }
 
     public void voteNay()
     {
-        myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "nay");
+        myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Nay");
         voteForCaptainPopup.SetActive(false);
         topText.text = "Tallying votes...";
     }
