@@ -19,6 +19,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public GameObject otherPiratePopup;
     public TextMeshProUGUI otherPirateName;
     public TextMeshProUGUI pirateLeaderName;
+    public GameObject voteForCaptainPopup;
+    public TextMeshProUGUI voteForCaptainName;
+    public TextMeshProUGUI voteForFirstMateName;    
     public TextMeshProUGUI topText;
     public string testString;
     //Game Elements
@@ -29,6 +32,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public Player currentPlayer;
     public Player firstMate;
     public Player captain;
+    public Player captainElect;
+    public Dictionary<string, string> allVotes = new Dictionary<string, string>();
 
     void Start()
     {
@@ -84,11 +89,11 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         currentPlayer = PhotonNetwork.PlayerList[ranNumArr[3]];
         firstMate = currentPlayer;
         captain = currentPlayer;
-        myPv.RPC("mainGameLoop", RpcTarget.All);
+        myPv.RPC("startGameLoop", RpcTarget.All);
     }
 
     [PunRPC]
-    void mainGameLoop()
+    void startGameLoop()
     {
         topText.text = currentPlayer.NickName + " is choosing a Captian.";
         if (PhotonNetwork.LocalPlayer == currentPlayer)
@@ -105,9 +110,36 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    void setCaptainElect(int n)
+    {
+        captainElect = PhotonNetwork.PlayerList[n];
+    }
+    [PunRPC]
     void voteForCaptain()
     {
-        Debug.Log("Captain chosen: " + captain.NickName);
+        topText.text = "";
+        foreach (TextMeshProUGUI name in displayNames)
+        {
+            Transform toggle = name.gameObject.transform.GetChild(0);
+            toggle.gameObject.SetActive(false);
+        }
+        voteForCaptainPopup.SetActive(true);
+        voteForCaptainName.text = captainElect.NickName;
+        voteForFirstMateName.text = firstMate.NickName;
+    }
+
+    [PunRPC]
+    void tallyVotes(string name, string vote)
+    {
+        allVotes.Add(name, vote);
+        if (allVotes.Count == 8)
+        {
+            foreach ( KeyValuePair<string, string> votes in allVotes)
+            {
+                Debug.Log(votes.Key + " voted " + votes.Value);
+            }
+            allVotes.Clear();
+        }
     }
 
     public void loyaltyToggle()
@@ -169,65 +201,63 @@ public class MainGameManager : MonoBehaviourPunCallbacks
 
     public void togglePlayerOne()
     {
-        Toggle m_toggle = GetComponent<Toggle>();
-        m_toggle.isOn = false;
-        myPv.RPC("setCaptain", RpcTarget.All, 0);
+        myPv.RPC("setCaptainElect", RpcTarget.All, 0);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
 
     public void togglePlayerTwo()
     {
-        //Toggle m_toggle = GetComponent<Toggle>();
-        //m_toggle.isOn = false;
-        myPv.RPC("setCaptain", RpcTarget.All, 1);
+        myPv.RPC("setCaptainElect", RpcTarget.All, 1);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
 
     public void togglePlayerThree()
     {
-        Toggle m_toggle = GetComponent<Toggle>();
-        m_toggle.isOn = false;
-        myPv.RPC("setCaptain", RpcTarget.All, 2);
+        myPv.RPC("setCaptainElect", RpcTarget.All, 2);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
 
     public void togglePlayerFour()
     {
-        Toggle m_toggle = GetComponent<Toggle>();
-        m_toggle.isOn = false;
-        myPv.RPC("setCaptain", RpcTarget.All, 3);
+        myPv.RPC("setCaptainElect", RpcTarget.All, 3);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
 
     public void togglePlayerFive()
     {
-        Toggle m_toggle = GetComponent<Toggle>();
-        m_toggle.isOn = false;
-        myPv.RPC("setCaptain", RpcTarget.All, 4);
+        myPv.RPC("setCaptainElect", RpcTarget.All, 4);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
 
     public void togglePlayerSix()
     {
-        Toggle m_toggle = GetComponent<Toggle>();
-        m_toggle.isOn = false;
-        myPv.RPC("setCaptain", RpcTarget.All, 5);
+        myPv.RPC("setCaptainElect", RpcTarget.All, 5);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
 
     public void togglePlayerSeven()
     {
-        Toggle m_toggle = GetComponent<Toggle>();
-        m_toggle.isOn = false;
-        myPv.RPC("setCaptain", RpcTarget.All, 6);
+        myPv.RPC("setCaptainElect", RpcTarget.All, 6);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
 
     public void togglePlayerEight()
     {
-        Toggle m_toggle = GetComponent<Toggle>();
-        m_toggle.isOn = false;
-        myPv.RPC("setCaptain", RpcTarget.All, 7);
+        myPv.RPC("setCaptainElect", RpcTarget.All, 7);
         myPv.RPC("voteForCaptain", RpcTarget.All);
+    }
+
+    public void voteAye()
+    {
+        myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "aye");
+        voteForCaptainPopup.SetActive(false);
+        topText.text = "Tallying votes...";
+    }
+
+    public void voteNay()
+    {
+        myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "nay");
+        voteForCaptainPopup.SetActive(false);
+        topText.text = "Tallying votes...";
     }
 }
