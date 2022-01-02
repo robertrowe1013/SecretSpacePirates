@@ -27,25 +27,35 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI listOfVotes;
     public TextMeshProUGUI voteTotalsText;
     public GameObject continueButton;
+    public TextMeshProUGUI autoMoveNum;
     //Game Elements
     public int maxPlayers = 8;
     public Player pirateLeader;
     public Player pirateCrew1;
     public Player pirateCrew2;
-    public Player currentPlayer;
     public Player firstMate;
     public Player captain;
     public Player captainElect;
     public Dictionary<string, string> allVotes = new Dictionary<string, string>();
     int voteTally;
     bool votePassed;
-
+    public int autoMoveCount;
+    public int blueDraw;
+    public int redDraw;
+    public int blueDiscard;
+    public int redDiscard;
     void Start()
     {
         myPv = this.GetComponent<PhotonView>();
         roomName.text = "Room Name: " + PlayerPrefs.GetString("RName");
+        autoMoveCount = 3;
+        autoMoveNum.text = autoMoveCount.ToString();
         PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
         PhotonNetwork.NickName = PlayerPrefs.GetString("PName");
+        blueDraw = 6;
+        redDraw = 11;
+        blueDiscard = 0;
+        redDiscard = 0;
         //Populate player names in UI
         if (PhotonNetwork.PlayerList.Length <= maxPlayers)
         {
@@ -71,7 +81,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             myPv.RPC("startGame", RpcTarget.All, numList as object);
         }
     }
-
     [PunRPC]
     void updateName()
     {
@@ -83,7 +92,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         }
         i = 0;
     }
-
     [PunRPC]
     void startGame(int[] ranNumArr)
     {
@@ -91,29 +99,25 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         pirateLeader = PhotonNetwork.PlayerList[ranNumArr[0]];
         pirateCrew1 = PhotonNetwork.PlayerList[ranNumArr[1]];
         pirateCrew2 = PhotonNetwork.PlayerList[ranNumArr[2]];
-        currentPlayer = PhotonNetwork.PlayerList[ranNumArr[3]];
-        firstMate = currentPlayer;
-        captain = currentPlayer;
+        firstMate = PhotonNetwork.PlayerList[ranNumArr[3]];
+        captain = firstMate;
         myPv.RPC("startGameLoop", RpcTarget.All);
     }
-
     [PunRPC]
     void startGameLoop()
     {
-        topText.text = currentPlayer.NickName + " is choosing a Captian.";
-        if (PhotonNetwork.LocalPlayer == currentPlayer)
+        topText.text = firstMate.NickName + " is choosing a Captian.";
+        if (PhotonNetwork.LocalPlayer == firstMate)
         {
             topText.text = "You are the First Mate! Choose a Captain.";
             activatePlayerChoices("chooseCaptain");
         }
     }
-
     [PunRPC]
     void setCaptain(int n)
     {
         captain = PhotonNetwork.PlayerList[n];
     }
-
     [PunRPC]
     void setCaptainElect(int n)
     {
@@ -132,7 +136,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         voteForCaptainName.text = captainElect.NickName;
         voteForFirstMateName.text = firstMate.NickName;
     }
-
     [PunRPC]
     void tallyVotes(string name, string vote)
     {
@@ -165,7 +168,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             allVotes.Clear();
         }
     }
-
     public void loyaltyToggle()
     {
         if (loyaltyPopup.activeSelf == true)
@@ -202,7 +204,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             }
         }
     }
-
     public void activatePlayerChoices(string activeType)
     {
         if (activeType == "chooseCaptain")
@@ -222,66 +223,102 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             }
         }
     }
-
     public void togglePlayerOne()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 0);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-
     public void togglePlayerTwo()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 1);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-
     public void togglePlayerThree()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 2);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-
     public void togglePlayerFour()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 3);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-
     public void togglePlayerFive()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 4);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-
     public void togglePlayerSix()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 5);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-
     public void togglePlayerSeven()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 6);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-
     public void togglePlayerEight()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 7);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-
     public void voteAye()
     {
         myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Aye");
         voteForCaptainPopup.SetActive(false);
         topText.text = "Tallying votes...";
     }
-
     public void voteNay()
     {
         myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Nay");
         voteForCaptainPopup.SetActive(false);
         topText.text = "Tallying votes...";
+    }
+    public void continueButtonClick()
+    {
+        continueButton.SetActive(false);
+        voteTallyPopup.SetActive(false);
+        if (votePassed)
+        {
+            //firstofficerbuilddeck
+            //firstofficerdrawthree
+            //firstofficerdiscardoneRPC
+            //captaindiscardoneRPC
+            //playoneRPC
+        }
+        else
+        {
+            autoMoveCount -= 1;
+            autoMoveNum.text = autoMoveCount.ToString();
+            if (autoMoveCount == 0)
+            {
+                autoMoveCount = 3;
+                autoMoveNum.text = autoMoveCount.ToString();
+                List<string> deck = new List<string>();
+                deck = buildDeck();
+                // drawone
+                // playoneRPC
+            }
+            if (captain == firstMate)
+            {
+                captain = captain.GetNext();
+            }
+            firstMate = firstMate.GetNext();
+            myPv.RPC("startGameLoop", RpcTarget.All);
+        }
+    }
+    public List<string> buildDeck()
+    {
+        List<string> deck = new List<string>();
+        for (int i = 0; i < blueDraw; i++)
+        {
+            deck.Add("Blue");
+        }
+        for (int i = 0; i < redDraw; i++)
+        {
+            deck.Add("Red");
+        }
+        return (deck);
     }
 }
