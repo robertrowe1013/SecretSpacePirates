@@ -41,6 +41,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     int voteTally;
     bool votePassed;
     public int autoMoveCount;
+    public int waitingForPlayers;
     public int blueDraw;
     public int redDraw;
     public int blueDiscard;
@@ -54,6 +55,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
         PhotonNetwork.NickName = PlayerPrefs.GetString("PName");
         // set starting values for game elements.
+        waitingForPlayers = 0;
         autoMoveCount = 3;
         autoMoveNum.text = autoMoveCount.ToString();
         blueDraw = 6;
@@ -111,6 +113,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void startGameLoop()
     {
+        waitingForPlayers = 0;
         topText.text = firstMate.NickName + " is choosing a Captian.";
         if (PhotonNetwork.LocalPlayer == firstMate)
         {
@@ -119,14 +122,23 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         }
     }
     [PunRPC]
-    void setCaptain(int n)
+    void endGameLoop()
     {
-        captain = PhotonNetwork.PlayerList[n];
+        waitingForPlayers += 1;
+        if (waitingForPlayers == maxPlayers)
+        {
+            myPv.RPC("startGameLoop", RpcTarget.All);
+        }
     }
     [PunRPC]
-    void setCaptainElect(int n)
+    void setCaptain(Player player)
     {
-        captainElect = PhotonNetwork.PlayerList[n];
+        captain = player;
+    }
+    [PunRPC]
+    void setCaptainElect(Player player)
+    {
+        captainElect = player;
     }
     [PunRPC]
     void voteForCaptain()
@@ -255,42 +267,42 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     #region toggleFunctions
     public void togglePlayerOne()
     {
-        myPv.RPC("setCaptainElect", RpcTarget.All, 0);
+        myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[0]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
     public void togglePlayerTwo()
     {
-        myPv.RPC("setCaptainElect", RpcTarget.All, 1);
+        myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[1]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
     public void togglePlayerThree()
     {
-        myPv.RPC("setCaptainElect", RpcTarget.All, 2);
+        myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[2]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
     public void togglePlayerFour()
     {
-        myPv.RPC("setCaptainElect", RpcTarget.All, 3);
+        myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[3]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
     public void togglePlayerFive()
     {
-        myPv.RPC("setCaptainElect", RpcTarget.All, 4);
+        myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[4]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
     public void togglePlayerSix()
     {
-        myPv.RPC("setCaptainElect", RpcTarget.All, 5);
+        myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[5]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
     public void togglePlayerSeven()
     {
-        myPv.RPC("setCaptainElect", RpcTarget.All, 6);
+        myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[6]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
     public void togglePlayerEight()
     {
-        myPv.RPC("setCaptainElect", RpcTarget.All, 7);
+        myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[7]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
     #endregion toggleFunctions
@@ -339,7 +351,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                 captain = captain.GetNext();
             }
             firstMate = firstMate.GetNext();
-            myPv.RPC("startGameLoop", RpcTarget.All);
+            topText.text = "Waiting for players to continue...";
+            {
+                myPv.RPC("endGameLoop", RpcTarget.All);
+            }
         }
     }
     public List<string> buildDeck()
