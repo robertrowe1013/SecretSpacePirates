@@ -4723,12 +4723,15 @@ MonoBehaviour:
   voteTotalsText: {fileID: 1119648922}
   continueButton: {fileID: 125508180}
   autoMoveNum: {fileID: 923383823}
+  debugCards: {fileID: 752693736}
   maxPlayers: 8
   autoMoveCount: 3
   blueDraw: 0
   redDraw: 0
   blueDiscard: 0
   redDiscard: 0
+  bluePlayed: 0
+  redPlayed: 0
 --- !u!4 &1216039167
 Transform:
   m_ObjectHideFlags: 0

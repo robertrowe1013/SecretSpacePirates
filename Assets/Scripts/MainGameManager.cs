@@ -28,6 +28,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI voteTotalsText;
     public GameObject continueButton;
     public TextMeshProUGUI autoMoveNum;
+    public TextMeshProUGUI debugCards;
     //Game Elements
     public int maxPlayers = 8;
     public Player pirateLeader;
@@ -44,14 +45,17 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public int redDraw;
     public int blueDiscard;
     public int redDiscard;
+    public int bluePlayed;
+    public int redPlayed;
     void Start()
     {
         myPv = this.GetComponent<PhotonView>();
         roomName.text = "Room Name: " + PlayerPrefs.GetString("RName");
-        autoMoveCount = 3;
-        autoMoveNum.text = autoMoveCount.ToString();
         PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
         PhotonNetwork.NickName = PlayerPrefs.GetString("PName");
+        // set starting values for game elements.
+        autoMoveCount = 3;
+        autoMoveNum.text = autoMoveCount.ToString();
         blueDraw = 6;
         redDraw = 11;
         blueDiscard = 0;
@@ -81,21 +85,22 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             myPv.RPC("startGame", RpcTarget.All, numList as object);
         }
     }
+    #region RPCFunctions
     [PunRPC]
     void updateName()
     {
+        // update player names in display across network
         int i = 0;
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             displayNames[i].text = player.NickName;
             i++;
         }
-        i = 0;
     }
     [PunRPC]
     void startGame(int[] ranNumArr)
     {
-        //set loyalties across network, assign first player
+        // set loyalties across network, assign first player
         pirateLeader = PhotonNetwork.PlayerList[ranNumArr[0]];
         pirateCrew1 = PhotonNetwork.PlayerList[ranNumArr[1]];
         pirateCrew2 = PhotonNetwork.PlayerList[ranNumArr[2]];
@@ -168,6 +173,30 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             allVotes.Clear();
         }
     }
+    [PunRPC]
+    void playCard(string card)
+    {
+        if (card == "Blue")
+        {
+            blueDraw -= 1;
+            bluePlayed += 1;
+            if (bluePlayed == 6)
+            {
+                //loyal crew wins
+            }
+        }
+        else
+        {
+            redDraw -= 1;
+            redPlayed += 1;
+            if (redPlayed == 6 || (redPlayed == 4 && captain == pirateLeader))
+            {
+                //pirates win
+            }
+        }
+        updateCards();
+    }
+    #endregion RPCFunctions
     public void loyaltyToggle()
     {
         if (loyaltyPopup.activeSelf == true)
@@ -223,6 +252,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             }
         }
     }
+    #region toggleFunctions
     public void togglePlayerOne()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, 0);
@@ -263,6 +293,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         myPv.RPC("setCaptainElect", RpcTarget.All, 7);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
+    #endregion toggleFunctions
     public void voteAye()
     {
         myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Aye");
@@ -295,10 +326,13 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             {
                 autoMoveCount = 3;
                 autoMoveNum.text = autoMoveCount.ToString();
-                List<string> deck = new List<string>();
-                deck = buildDeck();
-                // drawone
-                // playoneRPC
+                if (PhotonNetwork.LocalPlayer == firstMate)
+                {
+                    List<string> deck = new List<string>();
+                    deck = buildDeck();
+                    string card = deck[Random.Range(0, deck.Count)];
+                    myPv.RPC("playCard", RpcTarget.All, card);
+                }
             }
             if (captain == firstMate)
             {
@@ -319,6 +353,14 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         {
             deck.Add("Red");
         }
+        if (deck.Count == 0)
+        {
+            // reshuffle
+        }
         return (deck);
+    }
+    public void updateCards()
+    {
+        debugCards.text = blueDraw.ToString() + "/" + redDraw.ToString() + "\n" + blueDiscard.ToString() + "/" + redDiscard.ToString() + "\n" + bluePlayed.ToString() + "/" + redPlayed.ToString();
     }
 }
