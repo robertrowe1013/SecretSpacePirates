@@ -11,7 +11,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
 {
     PhotonView myPv;
     public GameObject playerPrefab;
-    //UI elements
+    #region UIElements
     public TextMeshProUGUI roomName;
     public TextMeshProUGUI[] displayNames;
     public GameObject loyaltyPopup;
@@ -29,7 +29,14 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public GameObject continueButton;
     public TextMeshProUGUI autoMoveNum;
     public TextMeshProUGUI debugCards;
-    //Game Elements
+    public GameObject choosePathPopup;
+    public TextMeshProUGUI choosePathText;
+    public TextMeshProUGUI pathOne;
+    public TextMeshProUGUI pathTwo;
+    public TextMeshProUGUI pathThree;
+    public GameObject PathThreeButton;
+    #endregion UIElements
+    #region GameElements
     public int maxPlayers = 8;
     public Player pirateLeader;
     public Player pirateCrew1;
@@ -48,6 +55,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public int redDiscard;
     public int bluePlayed;
     public int redPlayed;
+    #endregion GameElements
     void Start()
     {
         myPv = this.GetComponent<PhotonView>();
