@@ -55,6 +55,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public int redDiscard;
     public int bluePlayed;
     public int redPlayed;
+    public string card1;
+    public string card2;
+    public string card3;
     #endregion GameElements
     void Start()
     {
@@ -345,6 +348,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void continueButtonClick()
     {
+        topText.text = "";
         continueButton.SetActive(false);
         voteTallyPopup.SetActive(false);
         if (votePassed)
@@ -370,30 +374,35 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                             ranNums.Add(n);
                         }
                     }
-                    string card1 = deck[ranNums[0]];
-                    string card2 = deck[ranNums[1]];
-                    string card3 = deck[ranNums[2]];
+                    card1 = deck[ranNums[0]];
+                    card2 = deck[ranNums[1]];
+                    card3 = deck[ranNums[2]];
                 }
                 else if (deck.Count == 2)
                 {
-                    string card1 = deck[0];
-                    string card2 = deck[1];
+                    card1 = deck[0];
+                    card2 = deck[1];
                     List<string> discards = new List<string>();
                     discards = drawFromDiscards(1);
-                    string card3 = discards[0];
+                    card3 = discards[0];
                     myPv.RPC("reshuffle", RpcTarget.All);
                 }
                 else if (deck.Count == 1)
                 {
-                    string card1 = deck[0];
+                    card1 = deck[0];
                     List<string> discards = new List<string>();
                     discards = drawFromDiscards(2);
-                    string card2 = discards[0];
-                    string card3 = discards[1];
+                    card2 = discards[0];
+                    card3 = discards[1];
                     myPv.RPC("reshuffle", RpcTarget.All);
                 }
+                choosePathPopup.SetActive(true);
+                choosePathText.text = "Select path to discard.";
+                PathThreeButton.SetActive(true);
+                pathOne.text = card1;
+                pathTwo.text = card2;
+                pathThree.text = card3;
             }
-            //firstofficerdiscardoneRPC
             //captaindiscardoneRPC
             //playoneRPC
         }
