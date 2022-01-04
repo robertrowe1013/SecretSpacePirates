@@ -86,6 +86,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             numList = ranNums.ToArray();
             myPv.RPC("startGame", RpcTarget.All, numList as object);
         }
+        updateCards();
     }
     #region RPCFunctions
     [PunRPC]
@@ -190,22 +191,38 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     {
         if (card == "Blue")
         {
-            blueDraw -= 1;
+            blueDiscard -= 1;
             bluePlayed += 1;
-            if (bluePlayed == 6)
-            {
-                //loyal crew wins
-            }
+        }
+        else
+        {
+            redDiscard -= 1;
+            redPlayed += 1;
+        }
+        updateCards();
+    }
+        [PunRPC]
+    void discardCard(string card)
+    {
+        if (card == "Blue")
+        {
+            blueDraw -= 1;
+            blueDiscard += 1;
         }
         else
         {
             redDraw -= 1;
-            redPlayed += 1;
-            if (redPlayed == 6 || (redPlayed == 4 && captain == pirateLeader))
-            {
-                //pirates win
-            }
+            redDiscard += 1;
         }
+        updateCards();
+    }
+    [PunRPC]
+    void reshuffle()
+    {
+        blueDraw = blueDraw + blueDiscard;
+        blueDiscard = 0;
+        redDraw = redDraw + redDiscard;
+        redDiscard = 0;
         updateCards();
     }
     #endregion RPCFunctions
@@ -324,8 +341,50 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         voteTallyPopup.SetActive(false);
         if (votePassed)
         {
-            //firstofficerbuilddeck
-            //firstofficerdrawthree
+            if (PhotonNetwork.LocalPlayer == firstMate)
+            {
+                myPv.RPC("setCaptain", RpcTarget.All, captainElect);
+                List<string> deck = new List<string>();
+                deck = buildDeck();
+                if (deck.Count == 0)
+                {
+                    myPv.RPC("reshuffle", RpcTarget.All);
+                    deck = buildDeck();
+                }
+                if (deck.Count > 2)
+                {
+                    List<int> ranNums = new List<int>();
+                    while (ranNums.Count < 3)
+                    {
+                        int n = Random.Range(0, deck.Count);
+                        if (!ranNums.Contains(n))
+                        {
+                            ranNums.Add(n);
+                        }
+                    }
+                    string card1 = deck[ranNums[0]];
+                    string card2 = deck[ranNums[1]];
+                    string card3 = deck[ranNums[2]];
+                }
+                else if (deck.Count == 2)
+                {
+                    string card1 = deck[0];
+                    string card2 = deck[1];
+                    List<string> discards = new List<string>();
+                    discards = drawFromDiscards(1);
+                    string card3 = discards[0];
+                    myPv.RPC("reshuffle", RpcTarget.All);
+                }
+                else if (deck.Count == 1)
+                {
+                    string card1 = deck[0];
+                    List<string> discards = new List<string>();
+                    discards = drawFromDiscards(2);
+                    string card2 = discards[0];
+                    string card3 = discards[1];
+                    myPv.RPC("reshuffle", RpcTarget.All);
+                }
+            }
             //firstofficerdiscardoneRPC
             //captaindiscardoneRPC
             //playoneRPC
@@ -343,6 +402,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                     List<string> deck = new List<string>();
                     deck = buildDeck();
                     string card = deck[Random.Range(0, deck.Count)];
+                    myPv.RPC("discardCard", RpcTarget.All, card);
                     myPv.RPC("playCard", RpcTarget.All, card);
                 }
             }
@@ -370,7 +430,41 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         }
         if (deck.Count == 0)
         {
-            // reshuffle
+            myPv.RPC("reshuffle", RpcTarget.All);
+            deck = buildDeck();
+        }
+        return (deck);
+    }
+    public List<string> drawFromDiscards(int n)
+    {
+        List<string> deck = new List<string>();
+        for (int i = 0; i < blueDiscard; i++)
+        {
+            deck.Add("Blue");
+        }
+        for (int i = 0; i < redDiscard; i++)
+        {
+            deck.Add("Red");
+        }
+        if (n == 1)
+        {
+            deck[0] = deck[Random.Range(0, deck.Count)];
+        }
+        if (n == 2)
+        {
+            int i1 = Random.Range(0, deck.Count);
+            int i2 = Random.Range(0, deck.Count);
+            while (i1 == i2)
+            {
+                i2 = Random.Range(0, deck.Count);
+            }
+            if (i2 == 0)
+            {
+                i2 = i1;
+                i1 = 0;
+            }
+            deck[0] = deck[i1];
+            deck[1] = deck[i2];
         }
         return (deck);
     }
