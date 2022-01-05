@@ -292,7 +292,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             }
         }
     }
-    #region toggleFunctions
+    #region toggleAndButtonFunctions
     public void togglePlayerOne()
     {
         myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[0]);
@@ -333,7 +333,21 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[7]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-    #endregion toggleFunctions
+        public void pathSelectButtonOne()
+    {
+        string path = GameObject.Find("PathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
+        pathSelected(path);
+    }
+        public void pathSelectButtonTwo()
+    {
+        string path = GameObject.Find("PathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
+        pathSelected(path);
+    }
+        public void pathSelectButtonThree()
+    {
+        string path = GameObject.Find("PathButton3").GetComponentInChildren<TextMeshProUGUI>().text;
+        pathSelected(path);
+    }
     public void voteAye()
     {
         myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Aye");
@@ -346,6 +360,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         voteForCaptainPopup.SetActive(false);
         topText.text = "Tallying votes...";
     }
+    #endregion toggleAndButtonFunctions
     public void continueButtonClick()
     {
         topText.text = "";
@@ -403,8 +418,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                 pathTwo.text = card2;
                 pathThree.text = card3;
             }
-            //captaindiscardoneRPC
-            //playoneRPC
         }
         else
         {
@@ -485,8 +498,23 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         }
         return (deck);
     }
+    public void discardPath(string path)
+    {
+        if (path == "blue")
+        {
+            myPv.RPC("discardCard", RpcTarget.All, "Blue");
+        }
+        else
+        {
+            myPv.RPC("discardCard", RpcTarget.All, "Red");
+        }
+    }
     public void updateCards()
     {
         debugCards.text = blueDraw.ToString() + "/" + redDraw.ToString() + "\n" + blueDiscard.ToString() + "/" + redDiscard.ToString() + "\n" + bluePlayed.ToString() + "/" + redPlayed.ToString();
+    }
+    public void pathSelected(string path)
+    {
+
     }
 }
