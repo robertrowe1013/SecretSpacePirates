@@ -35,7 +35,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI fOPathThree;
     public GameObject cptnChoosePathPopup;
     public TextMeshProUGUI cptnPathOne;
-    public TextMeshProUGUI captPathTwo;
+    public TextMeshProUGUI cptnPathTwo;
     #endregion UIElements
     #region GameElements
     public int maxPlayers = 8;
@@ -243,9 +243,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         topText.text = captain.NickName + " is choosing a path.";
         if (PhotonNetwork.LocalPlayer == captain)
         {
+            topText.text = "";
             cptnChoosePathPopup.SetActive(true);
-            captPathOne.text = card1;
-            captPathTwo.text = card2;
+            cptnPathOne.text = card1;
+            cptnPathTwo.text = card2;
         }
     }
     #endregion RPCFunctions
@@ -347,35 +348,36 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void fOPathSelectButtonOne()
     {
-        string path = GameObject.Find("fOPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
-        pathSelected(path, "FO");
+        string path = GameObject.Find("FOPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
         FOChoosePathPopup.SetActive(false);
         card1 = card3;
+        pathSelected(path, "FO");
     }
     public void fOPathSelectButtonTwo()
     {
-        string path = GameObject.Find("fOPathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
-        pathSelected(path, "FO");
+        string path = GameObject.Find("FOPathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
         FOChoosePathPopup.SetActive(false);
         card2 = card3;
+        pathSelected(path, "FO");
     }
     public void fOPathSelectButtonThree()
     {
-        string path = GameObject.Find("fOPathButton3").GetComponentInChildren<TextMeshProUGUI>().text;
-        pathSelected(path, "FO");
+        string path = GameObject.Find("FOPathButton3").GetComponentInChildren<TextMeshProUGUI>().text;
         FOChoosePathPopup.SetActive(false);
+        pathSelected(path, "FO");
     }
     public void cptnPathSelectButtonOne()
     {
-        string path = GameObject.Find("cptnPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
-        pathSelected(path, "Cptn");
+        string path = GameObject.Find("CptnPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
         cptnChoosePathPopup.SetActive(false);
+        card1 = card2;
+        pathSelected(path, "Cptn");
     }
-        public void cptnPathSelectButtonOne()
+        public void cptnPathSelectButtonTwo()
     {
-        string path = GameObject.Find("cptnPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
-        pathSelected(path, "Cptn");
+        string path = GameObject.Find("cptnPathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
         cptnChoosePathPopup.SetActive(false);
+        pathSelected(path, "Cptn");
     }
     public void voteAye()
     {
@@ -540,14 +542,15 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void pathSelected(string path, string phase)
     {
-        discardPath(path);
         if (phase == "FO")
         {
-            myPv.RPC("captChoosesPath", RpcTarget.All);
+            discardPath(path);
+            myPv.RPC("cptnChoosesPath", RpcTarget.All);
         }
         if (phase == "Cptn")
         {
-            //RPC new turn
+            discardPath(card1);
+            myPv.RPC("playCard", RpcTarget.All, path);
         }
     }
     public void updateCards()

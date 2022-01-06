@@ -1054,7 +1054,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1216039166}
         m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
-        m_MethodName: FOPathSelectButtonOne
+        m_MethodName: fOPathSelectButtonOne
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2724,7 +2724,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &547252056
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4602,7 +4602,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1216039166}
         m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
-        m_MethodName: FOPathSelectButtonThree
+        m_MethodName: fOPathSelectButtonThree
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4889,7 +4889,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1216039166}
         m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
-        m_MethodName: FOPathSelectButtonTwo
+        m_MethodName: fOPathSelectButtonTwo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6079,7 +6079,7 @@ MonoBehaviour:
   fOPathThree: {fileID: 1221348837}
   cptnChoosePathPopup: {fileID: 1094731389}
   cptnPathOne: {fileID: 831101321}
-  captPathTwo: {fileID: 1964160037}
+  cptnPathTwo: {fileID: 1964160037}
   maxPlayers: 8
   autoMoveCount: 3
   waitingForPlayers: 0
@@ -6344,7 +6344,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1220799126}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1216039166}
+        m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
+        m_MethodName: cptnPathSelectButtonOne
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1220799126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9600,7 +9612,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2072094917}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1216039166}
+        m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
+        m_MethodName: cptnPathSelectButtonTwo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2072094917
 MonoBehaviour:
   m_ObjectHideFlags: 0
