@@ -29,12 +29,13 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public GameObject continueButton;
     public TextMeshProUGUI autoMoveNum;
     public TextMeshProUGUI debugCards;
-    public GameObject choosePathPopup;
-    public TextMeshProUGUI choosePathText;
-    public TextMeshProUGUI pathOne;
-    public TextMeshProUGUI pathTwo;
-    public TextMeshProUGUI pathThree;
-    public GameObject PathThreeButton;
+    public GameObject FOChoosePathPopup;
+    public TextMeshProUGUI fOPathOne;
+    public TextMeshProUGUI fOPathTwo;
+    public TextMeshProUGUI fOPathThree;
+    public GameObject cptnChoosePathPopup;
+    public TextMeshProUGUI cptnPathOne;
+    public TextMeshProUGUI captPathTwo;
     #endregion UIElements
     #region GameElements
     public int maxPlayers = 8;
@@ -236,6 +237,17 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         redDiscard = 0;
         updateCards();
     }
+    [PunRPC]
+    void captChoosesPath()
+    {
+        topText.text = captain.NickName + " is choosing a path.";
+        if (PhotonNetwork.LocalPlayer == captain)
+        {
+            cptnChoosePathPopup.SetActive(true);
+            captPathOne.text = card1;
+            captPathTwo.text = card2;
+        }
+    }
     #endregion RPCFunctions
     public void loyaltyToggle()
     {
@@ -333,20 +345,37 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         myPv.RPC("setCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[7]);
         myPv.RPC("voteForCaptain", RpcTarget.All);
     }
-        public void pathSelectButtonOne()
+    public void fOPathSelectButtonOne()
     {
-        string path = GameObject.Find("PathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
-        pathSelected(path);
+        string path = GameObject.Find("fOPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
+        pathSelected(path, "FO");
+        FOChoosePathPopup.SetActive(false);
+        card1 = card3;
     }
-        public void pathSelectButtonTwo()
+    public void fOPathSelectButtonTwo()
     {
-        string path = GameObject.Find("PathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
-        pathSelected(path);
+        string path = GameObject.Find("fOPathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
+        pathSelected(path, "FO");
+        FOChoosePathPopup.SetActive(false);
+        card2 = card3;
     }
-        public void pathSelectButtonThree()
+    public void fOPathSelectButtonThree()
     {
-        string path = GameObject.Find("PathButton3").GetComponentInChildren<TextMeshProUGUI>().text;
-        pathSelected(path);
+        string path = GameObject.Find("fOPathButton3").GetComponentInChildren<TextMeshProUGUI>().text;
+        pathSelected(path, "FO");
+        FOChoosePathPopup.SetActive(false);
+    }
+    public void cptnPathSelectButtonOne()
+    {
+        string path = GameObject.Find("cptnPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
+        pathSelected(path, "Cptn");
+        cptnChoosePathPopup.SetActive(false);
+    }
+        public void cptnPathSelectButtonOne()
+    {
+        string path = GameObject.Find("cptnPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
+        pathSelected(path, "Cptn");
+        cptnChoosePathPopup.SetActive(false);
     }
     public void voteAye()
     {
@@ -368,8 +397,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         voteTallyPopup.SetActive(false);
         if (votePassed)
         {
+            topText.text = firstMate.NickName + " is choosing a path.";
             if (PhotonNetwork.LocalPlayer == firstMate)
             {
+                topText.text = "";
                 myPv.RPC("setCaptain", RpcTarget.All, captainElect);
                 List<string> deck = new List<string>();
                 deck = buildDeck();
@@ -411,12 +442,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                     card3 = discards[1];
                     myPv.RPC("reshuffle", RpcTarget.All);
                 }
-                choosePathPopup.SetActive(true);
-                choosePathText.text = "Select path to discard.";
-                PathThreeButton.SetActive(true);
-                pathOne.text = card1;
-                pathTwo.text = card2;
-                pathThree.text = card3;
+                FOChoosePathPopup.SetActive(true);
+                fOPathOne.text = card1;
+                fOPathTwo.text = card2;
+                fOPathThree.text = card3;
             }
         }
         else
@@ -509,12 +538,20 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             myPv.RPC("discardCard", RpcTarget.All, "Red");
         }
     }
+    public void pathSelected(string path, string phase)
+    {
+        discardPath(path);
+        if (phase == "FO")
+        {
+            myPv.RPC("captChoosesPath", RpcTarget.All);
+        }
+        if (phase == "Cptn")
+        {
+            //RPC new turn
+        }
+    }
     public void updateCards()
     {
         debugCards.text = blueDraw.ToString() + "/" + redDraw.ToString() + "\n" + blueDiscard.ToString() + "/" + redDiscard.ToString() + "\n" + bluePlayed.ToString() + "/" + redPlayed.ToString();
-    }
-    public void pathSelected(string path)
-    {
-
     }
 }
