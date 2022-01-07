@@ -203,12 +203,12 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     {
         if (card == "Blue")
         {
-            blueDiscard -= 1;
+            blueDraw -= 1;
             bluePlayed += 1;
         }
         else
         {
-            redDiscard -= 1;
+            redDraw -= 1;
             redPlayed += 1;
         }
         updateCards();
@@ -238,7 +238,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         updateCards();
     }
     [PunRPC]
-    void captChoosesPath()
+    void cptnChoosesPath(string card1, string card2)
     {
         topText.text = captain.NickName + " is choosing a path.";
         if (PhotonNetwork.LocalPlayer == captain)
@@ -370,6 +370,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     {
         string path = GameObject.Find("CptnPathButton1").GetComponentInChildren<TextMeshProUGUI>().text;
         cptnChoosePathPopup.SetActive(false);
+        myPv.RPC("discardCard", RpcTarget.All, card1);
         card1 = card2;
         pathSelected(path, "Cptn");
     }
@@ -377,6 +378,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     {
         string path = GameObject.Find("cptnPathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
         cptnChoosePathPopup.SetActive(false);
+        myPv.RPC("discardCard", RpcTarget.All, card2);
         pathSelected(path, "Cptn");
     }
     public void voteAye()
@@ -545,7 +547,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         if (phase == "FO")
         {
             discardPath(path);
-            myPv.RPC("cptnChoosesPath", RpcTarget.All);
+            myPv.RPC("cptnChoosesPath", RpcTarget.All, card1, card2);
         }
         if (phase == "Cptn")
         {
