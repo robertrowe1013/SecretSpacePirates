@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 10602681}
   - component: {fileID: 10602680}
   m_Layer: 5
-  m_Name: TextLoyalty
+  m_Name: LoyaltyText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1247,7 +1247,7 @@ GameObject:
   - component: {fileID: 132437372}
   - component: {fileID: 132437371}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: LoyaltyButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1715,7 +1715,7 @@ GameObject:
   - component: {fileID: 272762443}
   - component: {fileID: 272762442}
   m_Layer: 5
-  m_Name: DebugOfficerText
+  m_Name: DebugOfficersText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1926,7 +1926,7 @@ GameObject:
   - component: {fileID: 340848335}
   - component: {fileID: 340848334}
   m_Layer: 5
-  m_Name: TextYouAre
+  m_Name: YouAreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2061,7 +2061,7 @@ GameObject:
   - component: {fileID: 386218211}
   - component: {fileID: 386218210}
   m_Layer: 5
-  m_Name: CVPBText
+  m_Name: ConfirmButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2854,7 +2854,7 @@ GameObject:
   - component: {fileID: 528995784}
   - component: {fileID: 528995783}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: AyeButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3756,7 +3756,7 @@ GameObject:
   - component: {fileID: 661048254}
   - component: {fileID: 661048253}
   m_Layer: 5
-  m_Name: voteForCaptainName
+  m_Name: VoteForCaptainName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4025,7 +4025,7 @@ GameObject:
   - component: {fileID: 685095528}
   - component: {fileID: 685095529}
   m_Layer: 5
-  m_Name: Path2Text
+  m_Name: FOPath2Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4256,7 +4256,7 @@ GameObject:
   - component: {fileID: 752693737}
   - component: {fileID: 752693736}
   m_Layer: 5
-  m_Name: DebugCardCountText
+  m_Name: DebugCardsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4536,7 +4536,7 @@ GameObject:
   - component: {fileID: 831101320}
   - component: {fileID: 831101321}
   m_Layer: 5
-  m_Name: Path1Text
+  m_Name: CaptainPath1Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5223,7 +5223,7 @@ GameObject:
   - component: {fileID: 972888700}
   - component: {fileID: 972888699}
   m_Layer: 5
-  m_Name: TextOtherPirateName
+  m_Name: OtherPirateNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5917,7 +5917,7 @@ GameObject:
   - component: {fileID: 1094731392}
   - component: {fileID: 1094731391}
   m_Layer: 5
-  m_Name: CptnChoosePathPopup
+  m_Name: CaptainChoosePathPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6436,7 +6436,7 @@ GameObject:
   - component: {fileID: 1167472591}
   - component: {fileID: 1167472590}
   m_Layer: 5
-  m_Name: CVPBText
+  m_Name: ConfirmButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6599,6 +6599,7 @@ MonoBehaviour:
   - {fileID: 136258733}
   - {fileID: 1256142277}
   - {fileID: 74018524}
+  autoMoveNum: {fileID: 923383823}
   loyaltyPopup: {fileID: 1458017936}
   loyaltyText: {fileID: 10602680}
   otherPiratePopup: {fileID: 1558867667}
@@ -6611,19 +6612,21 @@ MonoBehaviour:
   voteTallyPopup: {fileID: 485317559}
   listOfVotes: {fileID: 1550393372}
   voteTotalsText: {fileID: 1119648922}
-  continueButton: {fileID: 125508180}
-  autoMoveNum: {fileID: 923383823}
-  debugCards: {fileID: 752693736}
-  FOChoosePathPopup: {fileID: 547252055}
+  closeVotePopupButton: {fileID: 125508180}
+  fOChoosePathPopup: {fileID: 547252055}
   fOPathOne: {fileID: 1662848837}
   fOPathTwo: {fileID: 685095529}
   fOPathThree: {fileID: 1221348837}
-  cptnChoosePathPopup: {fileID: 1094731389}
-  cptnPathOne: {fileID: 831101321}
-  cptnPathTwo: {fileID: 1964160037}
-  cptnPathPopup: {fileID: 1532318577}
+  captainChoosePathPopup: {fileID: 1094731389}
+  captainPathOne: {fileID: 831101321}
+  captainPathTwo: {fileID: 1964160037}
+  captainPathChosenPopup: {fileID: 1532318577}
   pathResultsText: {fileID: 1394591539}
+  debugCardsText: {fileID: 752693736}
+  debugOfficersText: {fileID: 272762442}
   maxPlayers: 8
+  voteTally: 0
+  votePassed: 0
   autoMoveCount: 3
   waitingForPlayers: 0
   blueDraw: 0
@@ -6683,7 +6686,7 @@ GameObject:
   - component: {fileID: 1219439933}
   - component: {fileID: 1219439932}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NayButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6818,7 +6821,7 @@ GameObject:
   - component: {fileID: 1220799126}
   - component: {fileID: 1220799125}
   m_Layer: 5
-  m_Name: CptnPathButton1
+  m_Name: CaptainPathButton1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6950,7 +6953,7 @@ GameObject:
   - component: {fileID: 1221348836}
   - component: {fileID: 1221348837}
   m_Layer: 5
-  m_Name: Path3Text
+  m_Name: FOPath3Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7084,7 +7087,7 @@ GameObject:
   - component: {fileID: 1252454914}
   - component: {fileID: 1252454913}
   m_Layer: 5
-  m_Name: TextPirateLeaderName
+  m_Name: PirateLeaderNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7429,7 +7432,7 @@ GameObject:
   - component: {fileID: 1394591540}
   - component: {fileID: 1394591539}
   m_Layer: 5
-  m_Name: PathsDisplayResults
+  m_Name: PathsResultsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8372,7 +8375,7 @@ GameObject:
   - component: {fileID: 1558867670}
   - component: {fileID: 1558867669}
   m_Layer: 5
-  m_Name: TextFellowPirate
+  m_Name: OtherPiratePopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8778,7 +8781,7 @@ GameObject:
   - component: {fileID: 1633852479}
   - component: {fileID: 1633852478}
   m_Layer: 5
-  m_Name: CVPBText
+  m_Name: ContinueButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8988,7 +8991,7 @@ GameObject:
   - component: {fileID: 1662848836}
   - component: {fileID: 1662848837}
   m_Layer: 5
-  m_Name: Path1Text
+  m_Name: FOPath1Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9122,7 +9125,7 @@ GameObject:
   - component: {fileID: 1695326807}
   - component: {fileID: 1695326806}
   m_Layer: 5
-  m_Name: voteForFirstMateName
+  m_Name: VoteForFirstMateName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9595,7 +9598,7 @@ GameObject:
   - component: {fileID: 1790492180}
   - component: {fileID: 1790492179}
   m_Layer: 5
-  m_Name: TextPirateLeader
+  m_Name: PirateLeaderText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9938,7 +9941,7 @@ GameObject:
   - component: {fileID: 1898232609}
   - component: {fileID: 1898232608}
   m_Layer: 5
-  m_Name: CVPBText
+  m_Name: ContinueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10148,7 +10151,7 @@ GameObject:
   - component: {fileID: 1964160038}
   - component: {fileID: 1964160037}
   m_Layer: 5
-  m_Name: Path2Text
+  m_Name: CaptainPath2Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10282,7 +10285,7 @@ GameObject:
   - component: {fileID: 2049089992}
   - component: {fileID: 2049089991}
   m_Layer: 5
-  m_Name: DebugCardCount
+  m_Name: DebugCards
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10571,7 +10574,7 @@ GameObject:
   - component: {fileID: 2072094917}
   - component: {fileID: 2072094916}
   m_Layer: 5
-  m_Name: CptnPathButton2
+  m_Name: CaptainPathButton2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
