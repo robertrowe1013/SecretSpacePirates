@@ -29,6 +29,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public GameObject continueButton;
     public TextMeshProUGUI autoMoveNum;
     public TextMeshProUGUI debugCards;
+    public TextMeshProUGUI debugOfficers;
     public GameObject FOChoosePathPopup;
     public TextMeshProUGUI fOPathOne;
     public TextMeshProUGUI fOPathTwo;
@@ -36,6 +37,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public GameObject cptnChoosePathPopup;
     public TextMeshProUGUI cptnPathOne;
     public TextMeshProUGUI cptnPathTwo;
+    public GameObject cptnPathPopup;
+    public TextMeshProUGUI pathResultsText;
     #endregion UIElements
     #region GameElements
     public int maxPlayers = 8;
@@ -172,7 +175,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         allVotes.Add(name, vote);
         if (allVotes.Count == 8)
         {
-            topText.text = "";
             voteTally = 0;
             listOfVotes.text = "";
             voteTallyPopup.SetActive(true);
@@ -194,6 +196,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                 voteTotalsText.text = "The vote fails!";
                 votePassed = false;
             }
+            topText.text = "";
             continueButton.SetActive(true);
             allVotes.Clear();
         }
@@ -213,7 +216,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         }
         updateCards();
     }
-        [PunRPC]
+    [PunRPC]
     void discardCard(string card)
     {
         if (card == "Blue")
@@ -238,16 +241,24 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         updateCards();
     }
     [PunRPC]
-    void cptnChoosesPath(string card1, string card2)
+    void cptnChoosesPath(string card1passed, string card2passed)
     {
         topText.text = captain.NickName + " is choosing a path.";
         if (PhotonNetwork.LocalPlayer == captain)
         {
+            card1 = card1passed;
+            card2 = card2passed;
             topText.text = "";
             cptnChoosePathPopup.SetActive(true);
             cptnPathOne.text = card1;
             cptnPathTwo.text = card2;
         }
+    }
+    [PunRPC]
+    void pathResults()
+    {
+        cptnPathPopup.SetActive(true);
+        pathResultsText.text = bluePlayed + "\n" + redPlayed;
     }
     #endregion RPCFunctions
     public void loyaltyToggle()
@@ -376,7 +387,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
         public void cptnPathSelectButtonTwo()
     {
-        string path = GameObject.Find("cptnPathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
+        string path = GameObject.Find("CptnPathButton2").GetComponentInChildren<TextMeshProUGUI>().text;
         cptnChoosePathPopup.SetActive(false);
         myPv.RPC("discardCard", RpcTarget.All, card2);
         pathSelected(path, "Cptn");
@@ -392,6 +403,13 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         myPv.RPC("tallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Nay");
         voteForCaptainPopup.SetActive(false);
         topText.text = "Tallying votes...";
+    }
+    public void pathResultsContinue()
+    {
+        cptnPathPopup.SetActive(false);
+        firstMate = firstMate.GetNext();
+        topText.text = "Waiting for players...";
+        myPv.RPC("endGameLoop", RpcTarget.All);
     }
     #endregion toggleAndButtonFunctions
     public void continueButtonClick()
@@ -469,15 +487,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                     myPv.RPC("playCard", RpcTarget.All, card);
                 }
             }
-            if (captain == firstMate)
-            {
-                captain = captain.GetNext();
-            }
+            // bug for first vote failing.
             firstMate = firstMate.GetNext();
             topText.text = "Waiting for players to continue...";
-            {
-                myPv.RPC("endGameLoop", RpcTarget.All);
-            }
+            myPv.RPC("endGameLoop", RpcTarget.All);
         }
     }
     public List<string> buildDeck()
@@ -553,6 +566,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         {
             discardPath(card1);
             myPv.RPC("playCard", RpcTarget.All, path);
+            myPv.RPC("pathResults", RpcTarget.All);
         }
     }
     public void updateCards()
