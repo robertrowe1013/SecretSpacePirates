@@ -982,7 +982,7 @@ GameObject:
   - component: {fileID: 107969114}
   - component: {fileID: 107969113}
   m_Layer: 5
-  m_Name: FOPathButton1
+  m_Name: FMPathButton1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1054,7 +1054,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1216039166}
         m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
-        m_MethodName: fOPathSelectButtonOne
+        m_MethodName: fMPathSelectButtonOne
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1737,7 +1737,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 640, y: 100}
+  m_AnchoredPosition: {x: 680, y: 100}
   m_SizeDelta: {x: 120, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &272762442
@@ -3122,7 +3122,7 @@ GameObject:
   - component: {fileID: 547252058}
   - component: {fileID: 547252057}
   m_Layer: 5
-  m_Name: FOChoosePathPopup
+  m_Name: FMChoosePathPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3323,9 +3323,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Captain:
+  m_text: 'Curr Cap/FM:
 
-    First Mate:'
+    Prev Cap/FM:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4025,7 +4025,7 @@ GameObject:
   - component: {fileID: 685095528}
   - component: {fileID: 685095529}
   m_Layer: 5
-  m_Name: FOPath2Text
+  m_Name: FMPath2Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5091,7 +5091,7 @@ GameObject:
   - component: {fileID: 967215892}
   - component: {fileID: 967215891}
   m_Layer: 5
-  m_Name: FOPathButton3
+  m_Name: FMPathButton3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5143,7 +5143,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1216039166}
         m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
-        m_MethodName: fOPathSelectButtonThree
+        m_MethodName: fMPathSelectButtonThree
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5358,7 +5358,7 @@ GameObject:
   - component: {fileID: 980985942}
   - component: {fileID: 980985941}
   m_Layer: 5
-  m_Name: FOPathButton2
+  m_Name: FMPathButton2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5430,7 +5430,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1216039166}
         m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
-        m_MethodName: fOPathSelectButtonTwo
+        m_MethodName: fMPathSelectButtonTwo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6613,10 +6613,10 @@ MonoBehaviour:
   listOfVotes: {fileID: 1550393372}
   voteTotalsText: {fileID: 1119648922}
   closeVotePopupButton: {fileID: 125508180}
-  fOChoosePathPopup: {fileID: 547252055}
-  fOPathOne: {fileID: 1662848837}
-  fOPathTwo: {fileID: 685095529}
-  fOPathThree: {fileID: 1221348837}
+  fMChoosePathPopup: {fileID: 547252055}
+  fMPathOne: {fileID: 1662848837}
+  fMPathTwo: {fileID: 685095529}
+  fMPathThree: {fileID: 1221348837}
   captainChoosePathPopup: {fileID: 1094731389}
   captainPathOne: {fileID: 831101321}
   captainPathTwo: {fileID: 1964160037}
@@ -6893,7 +6893,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1216039166}
         m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
-        m_MethodName: cptnPathSelectButtonOne
+        m_MethodName: captainPathSelectButtonOne
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6953,7 +6953,7 @@ GameObject:
   - component: {fileID: 1221348836}
   - component: {fileID: 1221348837}
   m_Layer: 5
-  m_Name: FOPath3Text
+  m_Name: FMPath3Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8991,7 +8991,7 @@ GameObject:
   - component: {fileID: 1662848836}
   - component: {fileID: 1662848837}
   m_Layer: 5
-  m_Name: FOPath1Text
+  m_Name: FMPath1Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10646,7 +10646,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1216039166}
         m_TargetAssemblyTypeName: MainGameManager, Assembly-CSharp
-        m_MethodName: cptnPathSelectButtonTwo
+        m_MethodName: captainPathSelectButtonTwo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
