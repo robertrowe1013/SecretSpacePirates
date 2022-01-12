@@ -16,7 +16,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     // UI Elements
     public TextMeshProUGUI roomName;
     public TextMeshProUGUI[] displayNames;
-    public GameObject[] nameToggles;
+    public GameObject[] captainChoiceToggles;
+    public GameObject[] checkLoyaltyToggles;
+    public GameObject[] airlockPlayerToggles;
     public TextMeshProUGUI autoMoveNum;
     // loyalty window
     public GameObject loyaltyPopup;
@@ -44,6 +46,11 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public GameObject captainPathChosenPopup;
     public GameObject pathResultsButton;
     public TextMeshProUGUI pathResultsText;
+    // loyalty check power popups
+    public GameObject loyaltyCheckPopup;
+    public TextMeshProUGUI loyaltyCheckPlayerName;
+    public TextMeshProUGUI loyaltyCheckPlayerLoyalty;
+    public GameObject loyaltyCheckContinueButton;
     // debug window
     public TextMeshProUGUI debugCardsText;
     public TextMeshProUGUI debugOfficersText;
@@ -149,6 +156,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void fMChooseCaptain()
     {
+        // activates Captain Choice toggles
+        // leads to voteForCaptain()
         for (int i = 0; i < maxPlayers; i++)
         {
             if (PhotonNetwork.PlayerList[i].NickName == previousCaptain.NickName || PhotonNetwork.PlayerList[i].NickName == previousFM.NickName || PhotonNetwork.PlayerList[i].NickName == firstMate.NickName)
@@ -157,14 +166,14 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                nameToggles[i].SetActive(true);
+                captainChoiceToggles[i].SetActive(true);
             }
         }
     }
     public void voteForCaptain()
     {
         topText.text = "";
-        foreach (GameObject toggle in nameToggles)
+        foreach (GameObject toggle in captainChoiceToggles)
         {
             toggle.SetActive(false);
         }
@@ -202,7 +211,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             allVotes.Clear();
             topText.text = "";
             // bug!!! top text not clearing for 8th player
-            //enables continueButtonClick()
+            // enables continueButtonClick()
             closeVotePopupButton.SetActive(true);
         }
     }
@@ -360,8 +369,42 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.LocalPlayer == firstMate)
         {
             topText.text = "";
-
+            for (int i = 0; i < maxPlayers; i++)
+            {
+                if (PhotonNetwork.PlayerList[i] != firstMate)
+                {
+                    // activates Check Loyalty toggles
+                    // leads to loyaltyCheck()
+                    checkLoyaltyToggles[i].SetActive(true);
+                }
+            }
         }
+    }
+    public void loyaltyCheck(Player player)
+    {
+        topText.text = firstMate.NickName + " is checking " + player.NickName + " loyalty.";
+        loyaltyCheckContinueButton.SetActive(true);
+        if (PhotonNetwork.LocalPlayer == firstMate)
+        {
+            topText.text = "";
+            // leads to loyatlyCheckContinue()
+            loyaltyCheckPopup.SetActive(true);
+            loyaltyCheckPlayerName.text = player.NickName;
+            if (player == pirateCrew1 || player == pirateCrew2 || player == pirateLeader)
+            {
+                loyaltyCheckPlayerLoyalty.text = "a pirate!";
+            }
+            else
+            {
+                loyaltyCheckPlayerLoyalty.text = "loyal crew!";
+            }
+        }
+    }
+    public void loyaltyCheckContine()
+    {
+        loyaltyCheckPopup.SetActive(false);
+        topText.text = "";
+        myPv.RPC("RPCgameLoopEnd", RpcTarget.All);
     }
     public void airlockPlayerPower()
     {
@@ -386,45 +429,77 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         }
     }
     #region toggleAndButtonFunctions
-    public void togglePlayerOne()
+    public void togglePlayerOneCaptainChoice()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[0]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerTwo()
+    public void togglePlayerTwoCaptainChoice()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[1]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerThree()
+    public void togglePlayerThreeCaptainChoice()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[2]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerFour()
+    public void togglePlayerFourCaptainChoice()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[3]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerFive()
+    public void togglePlayerFiveCaptainChoice()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[4]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerSix()
+    public void togglePlayerSixCaptainChoice()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[5]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerSeven()
+    public void togglePlayerSevenCaptainChoice()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[6]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerEight()
+    public void togglePlayerEightCaptainChoice()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[7]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
+    }
+        public void togglePlayerOneCheckLoyalty()
+    {
+        myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[0]);
+    }
+    public void togglePlayerTwoCaptainCheckLoyalty()
+    {
+        myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[1]);
+    }
+    public void togglePlayerThreeCheckLoyalty()
+    {
+        myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[2]);
+    }
+    public void togglePlayerFourCheckLoyalty()
+    {
+        myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[3]);
+    }
+    public void togglePlayerFiveCheckLoyalty()
+    {
+        myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[4]);
+    }
+    public void togglePlayerSixCheckLoyalty()
+    {
+        myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[5]);
+    }
+    public void togglePlayerSevenCheckLoyalty()
+    {
+        myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[6]);
+    }
+    public void togglePlayerEightCheckLoyalty()
+    {
+        myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[7]);
     }
     public void voteAye()
     {
@@ -716,9 +791,15 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     {
         checkLoyaltyPower();
     }
+    [PunRPC]
     void RPCairlockPlayerPower()
     {
         airlockPlayerPower();
+    }
+    [PunRPC]
+    void RPCloyaltyCheck(Player player)
+    {
+        loyaltyCheck(player);
     }
     #endregion RPCFunctions
 }
