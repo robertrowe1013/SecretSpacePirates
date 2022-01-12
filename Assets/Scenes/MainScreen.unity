@@ -533,8 +533,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 402831436}
+  m_Children: []
   m_Father: {fileID: 1535544806}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -651,7 +650,7 @@ GameObject:
   - component: {fileID: 65557420}
   - component: {fileID: 65557421}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: PlayerFiveToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -669,12 +668,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1926333823}
-  m_Father: {fileID: 1756013562}
-  m_RootOrder: 0
+  m_Father: {fileID: 1535544806}
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 760, y: 400}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &65557421
@@ -765,8 +764,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 612655513}
+  m_Children: []
   m_Father: {fileID: 1535544806}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -883,7 +881,7 @@ GameObject:
   - component: {fileID: 91003730}
   - component: {fileID: 91003731}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: PlayerSevenToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -901,12 +899,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2074625782}
-  m_Father: {fileID: 1256142276}
-  m_RootOrder: 0
+  m_Father: {fileID: 1535544806}
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 760, y: -150}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &91003731
@@ -1397,8 +1395,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1024616698}
+  m_Children: []
   m_Father: {fileID: 1535544806}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1588,7 +1585,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &263111190
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2194,7 +2191,7 @@ GameObject:
   - component: {fileID: 402831436}
   - component: {fileID: 402831437}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: PlayerThreeToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2212,12 +2209,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1120366075}
-  m_Father: {fileID: 61033345}
-  m_RootOrder: 0
+  m_Father: {fileID: 1535544806}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -760, y: -150}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &402831437
@@ -2455,7 +2452,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Paths Chosen
+  m_text: Path Totals
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2622,7 +2619,7 @@ GameObject:
   - component: {fileID: 505882603}
   - component: {fileID: 505882604}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: PlayerOneToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2640,12 +2637,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 568424994}
-  m_Father: {fileID: 1402966999}
-  m_RootOrder: 0
+  m_Father: {fileID: 1535544806}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -760, y: 400}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &505882604
@@ -3506,8 +3503,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1119125068}
+  m_Children: []
   m_Father: {fileID: 1535544806}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3624,7 +3620,7 @@ GameObject:
   - component: {fileID: 612655513}
   - component: {fileID: 612655514}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: PlayerEightToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3642,12 +3638,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 949881340}
-  m_Father: {fileID: 74018523}
-  m_RootOrder: 0
+  m_Father: {fileID: 1535544806}
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 760, y: -400}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &612655514
@@ -3906,8 +3902,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 731486907}
+  m_Children: []
   m_Father: {fileID: 1535544806}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4158,7 +4153,7 @@ GameObject:
   - component: {fileID: 731486907}
   - component: {fileID: 731486908}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: PlayerTwoToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4176,12 +4171,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1334221531}
-  m_Father: {fileID: 682015932}
-  m_RootOrder: 0
+  m_Father: {fileID: 1535544806}
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -760, y: 150}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &731486908
@@ -5623,7 +5618,7 @@ GameObject:
   - component: {fileID: 1024616698}
   - component: {fileID: 1024616699}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: PlayerSixToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5641,12 +5636,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1639567211}
-  m_Father: {fileID: 136258732}
-  m_RootOrder: 0
+  m_Father: {fileID: 1535544806}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 760, y: 150}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1024616699
@@ -6128,7 +6123,7 @@ GameObject:
   - component: {fileID: 1119125068}
   - component: {fileID: 1119125069}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: PlayerFourToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6146,12 +6141,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 548165808}
-  m_Father: {fileID: 578582871}
-  m_RootOrder: 0
+  m_Father: {fileID: 1535544806}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -760, y: -400}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1119125069
@@ -6599,6 +6594,15 @@ MonoBehaviour:
   - {fileID: 136258733}
   - {fileID: 1256142277}
   - {fileID: 74018524}
+  nameToggles:
+  - {fileID: 505882602}
+  - {fileID: 731486906}
+  - {fileID: 402831435}
+  - {fileID: 1119125067}
+  - {fileID: 65557419}
+  - {fileID: 1024616697}
+  - {fileID: 91003729}
+  - {fileID: 612655512}
   autoMoveNum: {fileID: 923383823}
   loyaltyPopup: {fileID: 1458017936}
   loyaltyText: {fileID: 10602680}
@@ -6621,6 +6625,7 @@ MonoBehaviour:
   captainPathOne: {fileID: 831101321}
   captainPathTwo: {fileID: 1964160037}
   captainPathChosenPopup: {fileID: 1532318577}
+  pathResultsButton: {fileID: 263111189}
   pathResultsText: {fileID: 1394591539}
   debugCardsText: {fileID: 752693736}
   debugOfficersText: {fileID: 272762442}
@@ -7237,8 +7242,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 91003730}
+  m_Children: []
   m_Father: {fileID: 1535544806}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7584,8 +7588,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 505882603}
+  m_Children: []
   m_Father: {fileID: 1535544806}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8090,6 +8093,14 @@ Transform:
   - {fileID: 136258732}
   - {fileID: 1256142276}
   - {fileID: 74018523}
+  - {fileID: 505882603}
+  - {fileID: 731486907}
+  - {fileID: 402831436}
+  - {fileID: 1119125068}
+  - {fileID: 65557420}
+  - {fileID: 1024616698}
+  - {fileID: 91003730}
+  - {fileID: 612655513}
   m_Father: {fileID: 2080101639}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9358,8 +9369,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 65557420}
+  m_Children: []
   m_Father: {fileID: 1535544806}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

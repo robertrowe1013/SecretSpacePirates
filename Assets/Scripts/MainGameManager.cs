@@ -16,6 +16,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     // UI Elements
     public TextMeshProUGUI roomName;
     public TextMeshProUGUI[] displayNames;
+    public GameObject[] nameToggles;
     public TextMeshProUGUI autoMoveNum;
     // loyalty window
     public GameObject loyaltyPopup;
@@ -41,6 +42,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI captainPathOne;
     public TextMeshProUGUI captainPathTwo;
     public GameObject captainPathChosenPopup;
+    public GameObject pathResultsButton;
     public TextMeshProUGUI pathResultsText;
     // debug window
     public TextMeshProUGUI debugCardsText;
@@ -127,6 +129,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         pirateCrew1 = PhotonNetwork.PlayerList[ranNumArr[1]];
         pirateCrew2 = PhotonNetwork.PlayerList[ranNumArr[2]];
         firstMate = PhotonNetwork.PlayerList[ranNumArr[3]];
+        //debug set player 1 to FM every time
+        firstMate = PhotonNetwork.PlayerList[0];
+        //debug above
         previousCaptain = firstMate;
         previousFM = firstMate;
         captain = firstMate;
@@ -144,27 +149,24 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void fMChooseCaptain()
     {
-        foreach (TextMeshProUGUI name in displayNames)
+        for (int i = 0; i < maxPlayers; i++)
         {
-            // activates toggles for togglePlayerX()
-            if (name.text == previousCaptain.NickName || name.text == previousFM.NickName || name.text == firstMate.NickName)
+            if (PhotonNetwork.PlayerList[i].NickName == previousCaptain.NickName || PhotonNetwork.PlayerList[i].NickName == previousFM.NickName || PhotonNetwork.PlayerList[i].NickName == firstMate.NickName)
             {
                 continue;
             }
             else
             {
-                Transform toggle = name.gameObject.transform.GetChild(0);
-                toggle.gameObject.SetActive(true);
+                nameToggles[i].SetActive(true);
             }
         }
     }
     public void voteForCaptain()
     {
         topText.text = "";
-        foreach (TextMeshProUGUI name in displayNames)
+        foreach (GameObject toggle in nameToggles)
         {
-            Transform toggle = name.gameObject.transform.GetChild(0);
-            toggle.gameObject.SetActive(false);
+            toggle.SetActive(false);
         }
         //activates voteAye/Nay buttons
         voteForCaptainPopup.SetActive(true);
@@ -322,18 +324,52 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public void captainPathSelected(string path)
     {
         myPv.RPC("RPCplayCard", RpcTarget.All, path);
-        myPv.RPC("RPCpathResults", RpcTarget.All);
+        myPv.RPC("RPCpathResults", RpcTarget.All, path);
     }
 
-    public void pathResults()
+    public void pathResults(string path)
     {
         // activates pathResultsContinue()
-        topText.text = "";
+        topText.text = captain.NickName + " chose " + path;
         captainPathChosenPopup.SetActive(true);
         pathResultsText.text = bluePlayed + "\n" + redPlayed;
+        if (path == "Red")
+        {
+            if (redPlayed < 2)
+            {
+                pathResultsButton.SetActive(true);
+            }
+            if (redPlayed == 2 || redPlayed == 3)
+            {
+                myPv.RPC("RPCcheckLoyaltyPower", RpcTarget.All);
+            }
+            if (redPlayed == 4 || redPlayed == 5)
+            {
+                myPv.RPC("RPCairlockPlayerPower", RpcTarget.All);
+            }
+        }
+        //check end results
+        else
+        {
+            pathResultsButton.SetActive(true);
+        }
+    }
+    public void checkLoyaltyPower()
+    {
+        topText.text = "Waiting for " + firstMate.NickName;
+        if (PhotonNetwork.LocalPlayer == firstMate)
+        {
+            topText.text = "";
+
+        }
+    }
+    public void airlockPlayerPower()
+    {
+
     }
     public void pathResultsContinue()
     {
+        pathResultsButton.SetActive(false);
         captainPathChosenPopup.SetActive(false);
         myPv.RPC("RPCsetPreviousFM", RpcTarget.All, firstMate);
         myPv.RPC("RPCsetPreviousCaptain", RpcTarget.All, captain);
@@ -392,15 +428,15 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void voteAye()
     {
-        myPv.RPC("RPCtallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Aye");
         voteForCaptainPopup.SetActive(false);
         topText.text = "Tallying votes...";
+        myPv.RPC("RPCtallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Aye");
     }
     public void voteNay()
     {
-        myPv.RPC("RPCtallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Nay");
         voteForCaptainPopup.SetActive(false);
         topText.text = "Tallying votes...";
+        myPv.RPC("RPCtallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Nay");
     }
     public void fMPathSelectButtonOne()
     {
@@ -671,9 +707,18 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         captainChoosesPath(card1passed, card2passed);
     }
     [PunRPC]
-    void RPCpathResults()
+    void RPCpathResults(string path)
     {
-        pathResults();
+        pathResults(path);
+    }
+    [PunRPC]
+    void RPCcheckLoyaltyPower()
+    {
+        checkLoyaltyPower();
+    }
+    void RPCairlockPlayerPower()
+    {
+        airlockPlayerPower();
     }
     #endregion RPCFunctions
 }
