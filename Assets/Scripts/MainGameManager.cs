@@ -16,9 +16,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     // UI Elements
     public TextMeshProUGUI roomName;
     public TextMeshProUGUI[] displayNames;
-    public GameObject[] captainChoiceToggles;
-    public GameObject[] checkLoyaltyToggles;
-    public GameObject[] airlockPlayerToggles;
+    public GameObject[] CaptainChoiceButtons;
+    public GameObject[] checkLoyaltyButtons;
+    public GameObject[] airlockPlayerButtons;
     public TextMeshProUGUI autoMoveNum;
     // loyalty window
     public GameObject loyaltyPopup;
@@ -51,6 +51,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI loyaltyCheckPlayerName;
     public TextMeshProUGUI loyaltyCheckPlayerLoyalty;
     public GameObject loyaltyCheckContinueButton;
+    public GameObject airlockPlayerContinueButton;
+
     // debug window
     public TextMeshProUGUI debugCardsText;
     public TextMeshProUGUI debugOfficersText;
@@ -64,6 +66,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public Player captainElect;
     public Player previousCaptain;
     public Player previousFM;
+    public Player airlocked1;
+    public Player airlocked2;
     public Dictionary<string, string> allVotes = new Dictionary<string, string>();
     public int voteTally;
     public bool votePassed;
@@ -156,7 +160,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void fMChooseCaptain()
     {
-        // activates Captain Choice toggles
+        // activates Captain Choice buttons
         // leads to voteForCaptain()
         for (int i = 0; i < maxPlayers; i++)
         {
@@ -166,16 +170,16 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                captainChoiceToggles[i].SetActive(true);
+                CaptainChoiceButtons[i].SetActive(true);
             }
         }
     }
     public void voteForCaptain()
     {
         topText.text = "";
-        foreach (GameObject toggle in captainChoiceToggles)
+        foreach (GameObject button in CaptainChoiceButtons)
         {
-            toggle.SetActive(false);
+            button.SetActive(false);
         }
         //activates voteAye/Nay buttons
         voteForCaptainPopup.SetActive(true);
@@ -382,9 +386,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             {
                 if (PhotonNetwork.PlayerList[i] != firstMate)
                 {
-                    // activates Check Loyalty toggles
+                    // activates Check Loyalty buttons
                     // leads to loyaltyCheck()
-                    checkLoyaltyToggles[i].SetActive(true);
+                    checkLoyaltyButtons[i].SetActive(true);
                 }
             }
         }
@@ -414,9 +418,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         captainPathChosenPopup.SetActive(false);
         loyaltyCheckPopup.SetActive(false);
         loyaltyCheckContinueButton.SetActive(false);
-        foreach (GameObject toggle in checkLoyaltyToggles)
+        foreach (GameObject button in checkLoyaltyButtons)
         {
-            toggle.SetActive(false);
+            button.SetActive(false);
         }
         topText.text = "";
         myPv.RPC("RPCsetPreviousFM", RpcTarget.All, firstMate);
@@ -426,7 +430,42 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void airlockPlayerPower()
     {
-
+        captainPathChosenPopup.SetActive(false);
+        topText.text = "Waiting for " + firstMate.NickName;
+        if (PhotonNetwork.LocalPlayer == firstMate)
+        {
+            topText.text = "";
+            for (int i = 0; i < maxPlayers; i++)
+            {
+                if (PhotonNetwork.PlayerList[i] != firstMate)
+                {
+                    // activates Airlock Player buttons
+                    // leads to airlockPlayer()
+                    airlockPlayerButtons[i].SetActive(true);
+                }
+            }
+        }
+    }
+    public void airlockPlayer(Player player)
+    {
+        topText.text = firstMate.NickName + " has airlocked " + player.NickName + "!";
+        //add player to airlocked list
+        // leads to airlockPlayerContinue()
+        airlockPlayerContinueButton.SetActive(true);
+    }
+    public void airlockPlayerContine()
+    {
+        captainPathChosenPopup.SetActive(false);
+        airlockPlayerContinueButton.SetActive(false);
+        foreach (GameObject button in airlockPlayerButtons)
+        {
+            button.SetActive(false);
+        }
+        topText.text = "";
+        myPv.RPC("RPCsetPreviousFM", RpcTarget.All, firstMate);
+        myPv.RPC("RPCsetPreviousCaptain", RpcTarget.All, captain);
+        firstMate = firstMate.GetNext();
+        myPv.RPC("RPCgameLoopEnd", RpcTarget.All);
     }
     public void pathResultsContinue()
     {
@@ -446,78 +485,110 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             myPv.RPC("RPCgameLoopStart", RpcTarget.All);
         }
     }
-    #region toggleAndButtonFunctions
-    public void togglePlayerOneCaptainChoice()
+    #region ButtonFunctions
+    public void PlayerOneCaptainChoiceButton()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[0]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerTwoCaptainChoice()
+    public void PlayerTwoCaptainChoiceButton()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[1]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerThreeCaptainChoice()
+    public void PlayerThreeCaptainChoiceButton()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[2]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerFourCaptainChoice()
+    public void PlayerFourCaptainChoiceButton()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[3]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerFiveCaptainChoice()
+    public void PlayerFiveCaptainChoiceButton()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[4]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerSixCaptainChoice()
+    public void PlayerSixCaptainChoiceButton()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[5]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerSevenCaptainChoice()
+    public void PlayerSevenCaptainChoiceButton()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[6]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-    public void togglePlayerEightCaptainChoice()
+    public void PlayerEightCaptainChoiceButton()
     {
         myPv.RPC("RPCsetCaptainElect", RpcTarget.All, PhotonNetwork.PlayerList[7]);
         myPv.RPC("RPCvoteForCaptain", RpcTarget.All);
     }
-        public void togglePlayerOneCheckLoyalty()
+    public void PlayerOneCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[0]);
     }
-    public void togglePlayerTwoCheckLoyalty()
+    public void PlayerTwoCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[1]);
     }
-    public void togglePlayerThreeCheckLoyalty()
+    public void PlayerThreeCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[2]);
     }
-    public void togglePlayerFourCheckLoyalty()
+    public void PlayerFourCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[3]);
     }
-    public void togglePlayerFiveCheckLoyalty()
+    public void PlayerFiveCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[4]);
     }
-    public void togglePlayerSixCheckLoyalty()
+    public void PlayerSixCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[5]);
     }
-    public void togglePlayerSevenCheckLoyalty()
+    public void PlayerSevenCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[6]);
     }
-    public void togglePlayerEightCheckLoyalty()
+    public void PlayerEightCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[7]);
+    }
+    public void PlayerOneAirlock()
+    {
+        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[0]);
+    }
+    public void PlayerTwoAirlock()
+    {
+        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[1]);
+    }
+    public void PlayerThreeAirlock()
+    {
+        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[2]);
+    }
+    public void PlayerFourAirlock()
+    {
+        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[3]);
+    }
+    public void PlayerFiveAirlock()
+    {
+        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[4]);
+    }
+    public void PlayerSixAirlock()
+    {
+        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[5]);
+    }
+    public void PlayerSevenAirlock()
+    {
+        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[6]);
+    }
+    public void PlayerEightAirlock()
+    {
+        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[7]);
     }
     public void voteAye()
     {
@@ -565,7 +636,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         myPv.RPC("RPCdiscardCard", RpcTarget.All, card1);
         captainPathSelected(path);
     }
-    #endregion toggleAndButtonFunctions
+    #endregion ButtonFunctions
     public void setCaptain(Player player)
     {
         captain = player;
@@ -684,7 +755,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             myPv.RPC("RPCdiscardCard", RpcTarget.All, "Red");
         }
     }
-    public void loyaltyToggle()
+    public void loyaltyButton()
     {
         if (loyaltyPopup.activeSelf == true)
         {
@@ -818,6 +889,11 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     void RPCloyaltyCheck(Player player)
     {
         loyaltyCheck(player);
+    }
+    [PunRPC]
+    void RPCairlockPlayer(Player player)
+    {
+        airlockPlayer(player);
     }
     #endregion RPCFunctions
 }
