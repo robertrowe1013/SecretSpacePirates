@@ -41,6 +41,38 @@ MonoBehaviour:
   - RespawnSpaceship
   - updateName
   - startGame
+  - mainGameLoop
+  - setCaptain
+  - voteForCaptain
+  - setCaptainElect
+  - startGameLoop
+  - tallyVotes
+  - playCard
+  - endGameLoop
+  - discardCard
+  - reshuffle
+  - captChoosesPath
+  - cptnChoosesPath
+  - pathResults
+  - captainChoosesPath
+  - RPCgameLoopStart
+  - RPCstartGame
+  - RPCupdateName
+  - RPCcaptainChoosesPath
+  - RPCdiscardCard
+  - RPCgameLoopEnd
+  - RPCpathResults
+  - RPCplayCard
+  - RPCreshuffle
+  - RPCsetCaptain
+  - RPCsetCaptainElect
+  - RPCtallyVotes
+  - RPCvoteForCaptain
+  - RPCsetPreviousCaptain
+  - RPCsetPreviousFM
+  - RPCcheckLoyaltyPower
+  - RPCairlockPlayerPower
+  - RPCloyaltyCheck
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
