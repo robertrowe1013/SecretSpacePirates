@@ -257,6 +257,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void votePassedBranch()
     {
+        if (redPlayed > 3 && captain == pirateLeader)
+        {
+            // end game pirates
+        }
         topText.text = firstMate.NickName + " is choosing a path.";
         if (PhotonNetwork.LocalPlayer == firstMate)
         {
@@ -342,6 +346,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         topText.text = captain.NickName + " chose " + path;
         captainPathChosenPopup.SetActive(true);
         pathResultsText.text = bluePlayed + "\n" + redPlayed;
+        if (bluePlayed == 5 || redPlayed == 6)
+        {
+            // end game
+        }
         if (path == "Red")
         {
             if (redPlayed < 2)
@@ -365,6 +373,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void checkLoyaltyPower()
     {
+        captainPathChosenPopup.SetActive(false);
         topText.text = "Waiting for " + firstMate.NickName;
         if (PhotonNetwork.LocalPlayer == firstMate)
         {
@@ -402,8 +411,17 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void loyaltyCheckContine()
     {
+        captainPathChosenPopup.SetActive(false);
         loyaltyCheckPopup.SetActive(false);
+        loyaltyCheckContinueButton.SetActive(false);
+        foreach (GameObject toggle in checkLoyaltyToggles)
+        {
+            toggle.SetActive(false);
+        }
         topText.text = "";
+        myPv.RPC("RPCsetPreviousFM", RpcTarget.All, firstMate);
+        myPv.RPC("RPCsetPreviousCaptain", RpcTarget.All, captain);
+        firstMate = firstMate.GetNext();
         myPv.RPC("RPCgameLoopEnd", RpcTarget.All);
     }
     public void airlockPlayerPower()
@@ -473,7 +491,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[0]);
     }
-    public void togglePlayerTwoCaptainCheckLoyalty()
+    public void togglePlayerTwoCheckLoyalty()
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[1]);
     }
