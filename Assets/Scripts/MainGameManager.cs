@@ -55,7 +55,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
 
     // debug window
     public TextMeshProUGUI debugCardsText;
-    public TextMeshProUGUI debugOfficersText;
     // game functionality elements
     public int maxPlayers = 8;
     public Player pirateLeader;
@@ -141,11 +140,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         pirateCrew2 = PhotonNetwork.PlayerList[ranNumArr[2]];
         firstMate = PhotonNetwork.PlayerList[ranNumArr[3]];
         //debug set player 1 to FM every time
-        firstMate = PhotonNetwork.PlayerList[0];
-        //debug above
-        previousCaptain = firstMate;
-        previousFM = firstMate;
-        captain = firstMate;
+        //firstMate = PhotonNetwork.PlayerList[0];
         myPv.RPC("RPCgameLoopStart", RpcTarget.All);
     }
     public void gameLoopStart()
@@ -164,14 +159,19 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         // leads to voteForCaptain()
         for (int i = 0; i < maxPlayers; i++)
         {
-            if (PhotonNetwork.PlayerList[i].NickName == previousCaptain.NickName || PhotonNetwork.PlayerList[i].NickName == previousFM.NickName || PhotonNetwork.PlayerList[i].NickName == firstMate.NickName)
+            if (PhotonNetwork.PlayerList[i] == firstMate)
             {
                 continue;
             }
-            else
+            if (PhotonNetwork.PlayerList[i] == previousCaptain || PhotonNetwork.PlayerList[i] == previousFM)
             {
-                CaptainChoiceButtons[i].SetActive(true);
+                continue;
             }
+            if (PhotonNetwork.PlayerList[i] == airlocked1 || PhotonNetwork.PlayerList[i] == airlocked2)
+            {
+                continue;
+            }
+            CaptainChoiceButtons[i].SetActive(true);
         }
     }
     public void voteForCaptain()
@@ -254,8 +254,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                 myPv.RPC("RPCplayCard", RpcTarget.All, card);
             }
         }
-        // bug!!! if first vote fails needs to display next viable captains correctly
-        firstMate = firstMate.GetNext();
+        getNextPlayer();
         topText.text = "Waiting for players to continue...";
         myPv.RPC("RPCgameLoopEnd", RpcTarget.All);
     }
@@ -425,7 +424,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         topText.text = "";
         myPv.RPC("RPCsetPreviousFM", RpcTarget.All, firstMate);
         myPv.RPC("RPCsetPreviousCaptain", RpcTarget.All, captain);
-        firstMate = firstMate.GetNext();
+        getNextPlayer();
         myPv.RPC("RPCgameLoopEnd", RpcTarget.All);
     }
     public void airlockPlayerPower()
@@ -437,19 +436,27 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             topText.text = "";
             for (int i = 0; i < maxPlayers; i++)
             {
-                if (PhotonNetwork.PlayerList[i] != firstMate)
+                if (PhotonNetwork.PlayerList[i] == firstMate || PhotonNetwork.PlayerList[i] == airlocked1)
                 {
-                    // activates Airlock Player buttons
-                    // leads to airlockPlayer()
-                    airlockPlayerButtons[i].SetActive(true);
+                    continue;
                 }
+                // activates Airlock Player buttons
+                // leads to airlockPlayer()
+                airlockPlayerButtons[i].SetActive(true);
             }
         }
     }
     public void airlockPlayer(Player player)
     {
         topText.text = firstMate.NickName + " has airlocked " + player.NickName + "!";
-        //add player to airlocked list
+        if(airlocked1 != null)
+        {
+            airlocked2 = player;
+        }
+        else
+        {
+            airlocked1 = player;
+        }
         // leads to airlockPlayerContinue()
         airlockPlayerContinueButton.SetActive(true);
     }
@@ -464,7 +471,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         topText.text = "";
         myPv.RPC("RPCsetPreviousFM", RpcTarget.All, firstMate);
         myPv.RPC("RPCsetPreviousCaptain", RpcTarget.All, captain);
-        firstMate = firstMate.GetNext();
+        getNextPlayer();
         myPv.RPC("RPCgameLoopEnd", RpcTarget.All);
     }
     public void pathResultsContinue()
@@ -473,7 +480,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         captainPathChosenPopup.SetActive(false);
         myPv.RPC("RPCsetPreviousFM", RpcTarget.All, firstMate);
         myPv.RPC("RPCsetPreviousCaptain", RpcTarget.All, captain);
-        firstMate = firstMate.GetNext();
+        getNextPlayer();
         topText.text = "Waiting for players...";
         myPv.RPC("RPCgameLoopEnd", RpcTarget.All);
     }
@@ -640,22 +647,18 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public void setCaptain(Player player)
     {
         captain = player;
-        updateOfficers();
     }
     public void setCaptainElect(Player player)
     {
         captainElect = player;
-        updateOfficers();
     }
     public void setPreviousFM(Player player)
     {
         previousFM = player;
-        updateOfficers();
     }
     public void setPreviousCaptain(Player player)
     {
         previousCaptain = player;
-        updateOfficers();
     }
     public void playCard(string card)
     {
@@ -755,6 +758,14 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             myPv.RPC("RPCdiscardCard", RpcTarget.All, "Red");
         }
     }
+    public void getNextPlayer()
+    {
+        while (firstMate.GetNext() == airlocked1 || firstMate.GetNext() == airlocked2)
+        {
+            firstMate = firstMate.GetNext();
+        }
+        firstMate = firstMate.GetNext();
+    }
     public void loyaltyButton()
     {
         if (loyaltyPopup.activeSelf == true)
@@ -794,10 +805,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public void updateCards()
     {
         debugCardsText.text = blueDraw.ToString() + "/" + redDraw.ToString() + "\n" + blueDiscard.ToString() + "/" + redDiscard.ToString() + "\n" + bluePlayed.ToString() + "/" + redPlayed.ToString();
-    }
-    public void updateOfficers()
-    {
-        debugOfficersText.text = captain.NickName + "/" + firstMate.NickName + "\n" + previousCaptain.NickName + "/" + previousFM.NickName;
     }
     #region RPCFunctions
     [PunRPC]
