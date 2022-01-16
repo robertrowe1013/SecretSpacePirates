@@ -52,7 +52,11 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI loyaltyCheckPlayerLoyalty;
     public GameObject loyaltyCheckContinueButton;
     public GameObject airlockPlayerContinueButton;
-
+    // End Game Popup
+    public GameObject endGamePopup;
+    public TextMeshProUGUI winningTeamText;
+    public TextMeshProUGUI endGamePirateLeaderName;
+    public TextMeshProUGUI endGamePirateNames;
     // debug window
     public TextMeshProUGUI debugCardsText;
     // game functionality elements
@@ -214,7 +218,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             }
             allVotes.Clear();
             topText.text = "";
-            // bug!!! top text not clearing for 8th player
             // enables continueButtonClick()
             closeVotePopupButton.SetActive(true);
         }
@@ -262,7 +265,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     {
         if (redPlayed > 3 && captain == pirateLeader)
         {
-            // end game pirates
+            topText.text = "";
+            myPv.RPC("RPCgameOver", RpcTarget.All, "Red");
         }
         topText.text = firstMate.NickName + " is choosing a path.";
         if (PhotonNetwork.LocalPlayer == firstMate)
@@ -349,9 +353,15 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         topText.text = captain.NickName + " chose " + path;
         captainPathChosenPopup.SetActive(true);
         pathResultsText.text = bluePlayed + "\n" + redPlayed;
-        if (bluePlayed == 5 || redPlayed == 6)
+        if (bluePlayed == 5)
         {
-            // end game
+            topText.text = "";
+            myPv.RPC("RPCgameOver", RpcTarget.All, "Blue");
+        }
+        if (redPlayed == 6)
+        {
+            topText.text = "";
+            myPv.RPC("RPCgameOver", RpcTarget.All, "Red");
         }
         if (path == "Red")
         {
@@ -449,6 +459,11 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public void airlockPlayer(Player player)
     {
         topText.text = firstMate.NickName + " has airlocked " + player.NickName + "!";
+        if (player == pirateLeader)
+        {
+            topText.text = "";
+            myPv.RPC("RPCgameOver", RpcTarget.All, "Blue");
+        }
         if(airlocked1 != null)
         {
             airlocked2 = player;
@@ -491,6 +506,20 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         {
             myPv.RPC("RPCgameLoopStart", RpcTarget.All);
         }
+    }
+    public void gameOver(string team)
+    {
+        endGamePopup.SetActive(true);
+        if (team == "Red")
+        {
+            winningTeamText.text = "The Pirates Win!";
+        }
+        else
+        {
+            winningTeamText.text = "The Loyal Crew Wins!";
+        }
+        endGamePirateLeaderName.text = pirateLeader.NickName;
+        endGamePirateNames.text = pirateCrew1.NickName + "\n" + pirateCrew2.NickName;
     }
     #region ButtonFunctions
     public void PlayerOneCaptainChoiceButton()
@@ -901,6 +930,11 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     void RPCairlockPlayer(Player player)
     {
         airlockPlayer(player);
+    }
+    [PunRPC]
+    void RPCgameOver(string team)
+    {
+        gameOver(team);
     }
     #endregion RPCFunctions
 }
