@@ -85,14 +85,19 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public string card1;
     public string card2;
     public string card3;
+    // vuforia autofocus
+    bool focusModeSet = VuforiaBehaviour.Instance.CameraDevice.SetFocusMode(FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
     #endregion Variables
     void Start()
     {
+        // vuforia turn on autofocus
+        VuforiaApplication.Instance.OnVuforiaStarted += OnVuforiaStarted;
+        // add photon view
         myPv = this.GetComponent<PhotonView>();
-        roomName.text = "Room Name: " + PlayerPrefs.GetString("RName");
         PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
         PhotonNetwork.NickName = PlayerPrefs.GetString("PName");
         // set starting values for game elements.
+        roomName.text = "Room Name: " + PlayerPrefs.GetString("RName");
         waitingForPlayers = 0;
         autoMoveCount = 3;
         autoMoveNum.text = autoMoveCount.ToString();
@@ -937,4 +942,10 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         gameOver(team);
     }
     #endregion RPCFunctions
+    // vuforia turn on autofocus
+    private void OnVuforiaStarted()
+    {
+        VuforiaBehaviour.Instance.CameraDevice.SetFocusMode(FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
+        VuforiaBehaviour.Instance.CameraDevice.SetCameraMode(Vuforia.CameraMode.MODE_DEFAULT);
+    }
 }
