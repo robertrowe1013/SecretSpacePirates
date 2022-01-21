@@ -18,7 +18,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         // null check for room and player names
-        // check for dupe room and player names
         PlayerPrefs.SetString("PName", playerName.text);
         PlayerPrefs.SetString("RName", roomName.text);
         PlayerPrefs.Save();

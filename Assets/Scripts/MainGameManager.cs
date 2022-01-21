@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Vuforia;
 
 public class MainGameManager : MonoBehaviourPunCallbacks
 {
@@ -85,8 +86,6 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public string card1;
     public string card2;
     public string card3;
-    // vuforia autofocus
-    bool focusModeSet = VuforiaBehaviour.Instance.CameraDevice.SetFocusMode(FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
     #endregion Variables
     void Start()
     {
@@ -268,6 +267,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void votePassedBranch()
     {
+        autoMoveCount = 3;
         if (redPlayed > 3 && captain == pirateLeader)
         {
             topText.text = "";
@@ -354,8 +354,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
 
     public void pathResults(string path)
     {
-        // activates pathResultsContinue()
         topText.text = captain.NickName + " chose " + path;
+        // activates pathResultsContinue()
         captainPathChosenPopup.SetActive(true);
         pathResultsText.text = bluePlayed + "\n" + redPlayed;
         if (bluePlayed == 5)
