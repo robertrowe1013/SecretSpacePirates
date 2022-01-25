@@ -19,7 +19,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI[] displayNames;
     public GameObject[] CaptainChoiceButtons;
     public GameObject[] checkLoyaltyButtons;
-    public GameObject[] airlockPlayerButtons;
+    public GameObject[] brigPlayerButtons;
     public TextMeshProUGUI autoMoveNum;
     // loyalty window
     public GameObject loyaltyPopup;
@@ -52,7 +52,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI loyaltyCheckPlayerName;
     public TextMeshProUGUI loyaltyCheckPlayerLoyalty;
     public GameObject loyaltyCheckContinueButton;
-    public GameObject airlockPlayerContinueButton;
+    public GameObject brigPlayerContinueButton;
     // End Game Popup
     public GameObject endGamePopup;
     public TextMeshProUGUI winningTeamText;
@@ -70,8 +70,8 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public Player captainElect;
     public Player previousCaptain;
     public Player previousFM;
-    public Player airlocked1;
-    public Player airlocked2;
+    public Player brigged1;
+    public Player brigged2;
     public Dictionary<string, string> allVotes = new Dictionary<string, string>();
     public int voteTally;
     public bool votePassed;
@@ -86,6 +86,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public string card1;
     public string card2;
     public string card3;
+    public int briggedPlayers = 0;
     #endregion Variables
     void Start()
     {
@@ -175,7 +176,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             {
                 continue;
             }
-            if (PhotonNetwork.PlayerList[i] == airlocked1 || PhotonNetwork.PlayerList[i] == airlocked2)
+            if (PhotonNetwork.PlayerList[i] == brigged1 || PhotonNetwork.PlayerList[i] == brigged2)
             {
                 continue;
             }
@@ -190,14 +191,25 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             button.SetActive(false);
         }
         //activates voteAye/Nay buttons
-        voteForCaptainPopup.SetActive(true);
-        voteForCaptainName.text = captainElect.NickName;
-        voteForFirstMateName.text = firstMate.NickName;
+        for (int i = 0; i < maxPlayers; i++)
+        {
+            if (PhotonNetwork.PlayerList[i] == brigged1 || PhotonNetwork.PlayerList[i] == brigged2)
+            {
+                topText.text = "You are in the brig.";
+                allVotes.Add(PhotonNetwork.PlayerList[i].NickName, "disenfranchised");
+            }
+            else
+            {
+                voteForCaptainPopup.SetActive(true);
+                voteForCaptainName.text = captainElect.NickName;
+                voteForFirstMateName.text = firstMate.NickName;
+            }
+        }
     }
     public void tallyVotes(string name, string vote)
     {
         allVotes.Add(name, vote);
-        if (allVotes.Count == 8)
+        if (allVotes.Count == maxPlayers)
         {
             voteTally = 0;
             listOfVotes.text = "";
@@ -210,7 +222,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                     voteTally += 1;
                 }
             }
-            if (voteTally > maxPlayers / 2)
+            if (voteTally > (maxPlayers - briggedPlayers) / 2)
             {
                 voteTotalsText.text = "The vote passes!";
                 votePassed = true;
@@ -380,7 +392,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             }
             if (redPlayed == 4 || redPlayed == 5)
             {
-                myPv.RPC("RPCairlockPlayerPower", RpcTarget.All);
+                myPv.RPC("RPCbrigPlayerPower", RpcTarget.All);
             }
         }
         //check end results
@@ -395,7 +407,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         topText.text = "Waiting for " + firstMate.NickName;
         if (PhotonNetwork.LocalPlayer == firstMate)
         {
-            topText.text = "";
+            topText.text = "Select player to view Loyalty";
             for (int i = 0; i < maxPlayers; i++)
             {
                 if (PhotonNetwork.PlayerList[i] != firstMate)
@@ -442,7 +454,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         getNextPlayer();
         myPv.RPC("RPCgameLoopEnd", RpcTarget.All);
     }
-    public void airlockPlayerPower()
+    public void brigPlayerPower()
     {
         captainPathChosenPopup.SetActive(false);
         topText.text = "Waiting for " + firstMate.NickName;
@@ -451,40 +463,41 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             topText.text = "";
             for (int i = 0; i < maxPlayers; i++)
             {
-                if (PhotonNetwork.PlayerList[i] == firstMate || PhotonNetwork.PlayerList[i] == airlocked1)
+                if (PhotonNetwork.PlayerList[i] == firstMate || PhotonNetwork.PlayerList[i] == brigged1)
                 {
                     continue;
                 }
-                // activates Airlock Player buttons
-                // leads to airlockPlayer()
-                airlockPlayerButtons[i].SetActive(true);
+                // activates Brig Player buttons
+                // leads to brigPlayer()
+                brigPlayerButtons[i].SetActive(true);
             }
         }
     }
-    public void airlockPlayer(Player player)
+    public void brigPlayer(Player player)
     {
-        topText.text = firstMate.NickName + " has airlocked " + player.NickName + "!";
+        topText.text = firstMate.NickName + " has brigged " + player.NickName + "!";
         if (player == pirateLeader)
         {
             topText.text = "";
             myPv.RPC("RPCgameOver", RpcTarget.All, "Blue");
         }
-        if(airlocked1 != null)
+        if(briggedPlayers == 1)
         {
-            airlocked2 = player;
+            brigged2 = player;
         }
         else
         {
-            airlocked1 = player;
+            brigged1 = player;
         }
-        // leads to airlockPlayerContinue()
-        airlockPlayerContinueButton.SetActive(true);
+        briggedPlayers += 1;
+        // leads to brigPlayerContinue()
+        brigPlayerContinueButton.SetActive(true);
     }
-    public void airlockPlayerContine()
+    public void brigPlayerContine()
     {
         captainPathChosenPopup.SetActive(false);
-        airlockPlayerContinueButton.SetActive(false);
-        foreach (GameObject button in airlockPlayerButtons)
+        brigPlayerContinueButton.SetActive(false);
+        foreach (GameObject button in brigPlayerButtons)
         {
             button.SetActive(false);
         }
@@ -599,37 +612,37 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     {
         myPv.RPC("RPCloyaltyCheck", RpcTarget.All, PhotonNetwork.PlayerList[7]);
     }
-    public void PlayerOneAirlock()
+    public void PlayerOneBrig()
     {
-        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[0]);
+        myPv.RPC("RPCbrigPlayer", RpcTarget.All, PhotonNetwork.PlayerList[0]);
     }
-    public void PlayerTwoAirlock()
+    public void PlayerTwoBrig()
     {
-        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[1]);
+        myPv.RPC("RPCbrigPlayer", RpcTarget.All, PhotonNetwork.PlayerList[1]);
     }
-    public void PlayerThreeAirlock()
+    public void PlayerThreeBrig()
     {
-        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[2]);
+        myPv.RPC("RPCbrigPlayer", RpcTarget.All, PhotonNetwork.PlayerList[2]);
     }
-    public void PlayerFourAirlock()
+    public void PlayerFourBrig()
     {
-        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[3]);
+        myPv.RPC("RPCbrigPlayer", RpcTarget.All, PhotonNetwork.PlayerList[3]);
     }
-    public void PlayerFiveAirlock()
+    public void PlayerFiveBrig()
     {
-        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[4]);
+        myPv.RPC("RPCbrigPlayer", RpcTarget.All, PhotonNetwork.PlayerList[4]);
     }
-    public void PlayerSixAirlock()
+    public void PlayerSixBrig()
     {
-        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[5]);
+        myPv.RPC("RPCbrigPlayer", RpcTarget.All, PhotonNetwork.PlayerList[5]);
     }
-    public void PlayerSevenAirlock()
+    public void PlayerSevenBrig()
     {
-        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[6]);
+        myPv.RPC("RPCbrigPlayer", RpcTarget.All, PhotonNetwork.PlayerList[6]);
     }
-    public void PlayerEightAirlock()
+    public void PlayerEightBrig()
     {
-        myPv.RPC("RPCairlockPlayer", RpcTarget.All, PhotonNetwork.PlayerList[7]);
+        myPv.RPC("RPCbrigPlayer", RpcTarget.All, PhotonNetwork.PlayerList[7]);
     }
     public void voteAye()
     {
@@ -794,7 +807,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     }
     public void getNextPlayer()
     {
-        while (firstMate.GetNext() == airlocked1 || firstMate.GetNext() == airlocked2)
+        while (firstMate.GetNext() == brigged1 || firstMate.GetNext() == brigged2)
         {
             firstMate = firstMate.GetNext();
         }
@@ -922,9 +935,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         checkLoyaltyPower();
     }
     [PunRPC]
-    void RPCairlockPlayerPower()
+    void RPCbrigPlayerPower()
     {
-        airlockPlayerPower();
+        brigPlayerPower();
     }
     [PunRPC]
     void RPCloyaltyCheck(Player player)
@@ -932,9 +945,9 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         loyaltyCheck(player);
     }
     [PunRPC]
-    void RPCairlockPlayer(Player player)
+    void RPCbrigPlayer(Player player)
     {
-        airlockPlayer(player);
+        brigPlayer(player);
     }
     [PunRPC]
     void RPCgameOver(string team)
