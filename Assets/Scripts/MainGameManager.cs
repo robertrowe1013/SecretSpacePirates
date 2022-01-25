@@ -110,7 +110,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         {
             myPv.RPC("RPCupdateName", RpcTarget.All);
         }
-        // Start Game once 8th player joins
+        // Start Game once last player joins
         if (PhotonNetwork.PlayerList.Length == maxPlayers)
         {
             // randomize loyalties
@@ -196,7 +196,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             if (PhotonNetwork.PlayerList[i] == brigged1 || PhotonNetwork.PlayerList[i] == brigged2)
             {
                 topText.text = "You are in the brig.";
-                allVotes.Add(PhotonNetwork.PlayerList[i].NickName, "disenfranchised");
+                allVotes.Add(PhotonNetwork.PlayerList[i].NickName, "brig");
             }
             else
             {
@@ -216,10 +216,18 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             voteTallyPopup.SetActive(true);
             foreach ( KeyValuePair<string, string> votes in allVotes)
             {
-                listOfVotes.text = listOfVotes.text + votes.Key + " voted " + votes.Value + "\n";
                 if (votes.Value == "Aye")
                 {
+                    listOfVotes.text = listOfVotes.text + votes.Key + " voted " + votes.Value + "\n";
                     voteTally += 1;
+                }
+                else if (votes.Value == "Nay")
+                {
+                    listOfVotes.text = listOfVotes.text + votes.Key + " voted " + votes.Value + "\n";
+                }
+                else
+                {
+                    listOfVotes.text = listOfVotes.text + votes.Key + " is in the brig.\n";
                 }
             }
             if (voteTally > (maxPlayers - briggedPlayers) / 2)
