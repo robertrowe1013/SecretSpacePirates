@@ -190,6 +190,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         {
             button.SetActive(false);
         }
+        // BUG remove brigged players from voting process
         //activates voteAye/Nay buttons
         for (int i = 0; i < maxPlayers; i++)
         {
