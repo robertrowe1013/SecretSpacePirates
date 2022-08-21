@@ -87,6 +87,18 @@ public class MainGameManager : MonoBehaviourPunCallbacks
     public string card2;
     public string card3;
     public int briggedPlayers = 0;
+    // display elements
+    public int turnNumber = 0;
+    public GameObject Path1Red;
+    public GameObject Path1Blue;
+    public GameObject Path2Red;
+    public GameObject Path2Blue;
+    public GameObject ShipPos0;
+    public GameObject ShipPos1;
+    public GameObject ShipPos2;
+    public GameObject PiratePos0;
+    public GameObject PiratePos1;
+    public GameObject PiratePos2;
     #endregion Variables
     void Start()
     {
@@ -375,6 +387,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
 
     public void pathResults(string path)
     {
+        moveShips(path);
         topText.text = captain.NickName + " chose " + path;
         // activates pathResultsContinue()
         captainPathChosenPopup.SetActive(true);
@@ -404,11 +417,44 @@ public class MainGameManager : MonoBehaviourPunCallbacks
                 myPv.RPC("RPCbrigPlayerPower", RpcTarget.All);
             }
         }
-        //check end results
         else
         {
             pathResultsButton.SetActive(true);
         }
+    }
+    public void moveShips(string path)
+    {
+        if (turnNumber == 0)
+        {
+            ShipPos0.SetActive(false);
+            PiratePos0.SetActive(false);
+            ShipPos1.SetActive(true);
+            PiratePos1.SetActive(true);
+            if (path == "blue")
+            {
+                Path1Blue.SetActive(true);
+            }
+            else
+            {
+                Path1Red.SetActive(true);
+            }
+        }
+        else if (turnNumber == 1)
+        {
+            ShipPos1.SetActive(false);
+            PiratePos1.SetActive(false);
+            ShipPos2.SetActive(true);
+            PiratePos2.SetActive(true);
+            if (path == "blue")
+            {
+                Path2Blue.SetActive(true);
+            }
+            else
+            {
+                Path2Red.SetActive(true);
+            }
+        }
+        turnNumber += 1;
     }
     public void checkLoyaltyPower()
     {
