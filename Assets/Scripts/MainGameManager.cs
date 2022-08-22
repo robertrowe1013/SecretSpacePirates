@@ -202,14 +202,14 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         {
             button.SetActive(false);
         }
-        // BUG remove brigged players from voting process
+        // BUG
         //activates voteAye/Nay buttons
         for (int i = 0; i < maxPlayers; i++)
         {
-            if (PhotonNetwork.PlayerList[i] == brigged1 || PhotonNetwork.PlayerList[i] == brigged2)
+            if (PhotonNetwork.LocalPlayer == brigged1 || PhotonNetwork.LocalPlayer == brigged2)
             {
                 topText.text = "You are in the brig.";
-                allVotes.Add(PhotonNetwork.PlayerList[i].NickName, "brig");
+                myPv.RPC("RPCtallyVotes", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, "Brig");
             }
             else
             {
