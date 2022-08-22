@@ -430,7 +430,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             PiratePos0.SetActive(false);
             ShipPos1.SetActive(true);
             PiratePos1.SetActive(true);
-            if (path == "blue")
+            if (path == "Blue")
             {
                 Path1Blue.SetActive(true);
             }
@@ -445,7 +445,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
             PiratePos1.SetActive(false);
             ShipPos2.SetActive(true);
             PiratePos2.SetActive(true);
-            if (path == "blue")
+            if (path == "Blue")
             {
                 Path2Blue.SetActive(true);
             }
@@ -515,7 +515,7 @@ public class MainGameManager : MonoBehaviourPunCallbacks
         topText.text = "Waiting for " + firstMate.NickName;
         if (PhotonNetwork.LocalPlayer == firstMate)
         {
-            topText.text = "";
+            topText.text = "Choose character to place in brig.";
             for (int i = 0; i < maxPlayers; i++)
             {
                 if (PhotonNetwork.PlayerList[i] == firstMate || PhotonNetwork.PlayerList[i] == brigged1)
